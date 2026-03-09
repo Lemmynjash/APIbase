@@ -77,7 +77,15 @@ async function checkPostgres(): Promise<boolean> {
 
 async function checkRedis(): Promise<boolean> {
   const redis = getHealthRedis();
-  if (redis.status === 'wait') {
+  if (redis.status === 'wait' || redis.status === 'end') {
+    // Recreate client if ended (post-disconnect cleanup)
+    if (redis.status === 'end') {
+      healthRedis = null;
+      const fresh = getHealthRedis();
+      await fresh.connect();
+      const result = await fresh.ping();
+      return result === 'PONG';
+    }
     await redis.connect();
   }
   const result = await redis.ping();

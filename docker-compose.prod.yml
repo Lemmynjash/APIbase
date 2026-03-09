@@ -235,10 +235,10 @@ services:
     networks:
       - app
     healthcheck:
-      test: ["CMD-SHELL", "echo OK"]
-      interval: 10s
+      test: ["CMD", "/redis_exporter", "--version"]
+      interval: 30s
       timeout: 5s
-      retries: 5
+      retries: 3
       start_period: 10s
     deploy:
       resources:
@@ -258,17 +258,17 @@ services:
   nginx_exporter:
     image: nginx/nginx-prometheus-exporter:1.1.0
     restart: unless-stopped
-    command: ["-nginx.scrape-uri=http://nginx:8080/stub_status"]
+    command: ["--nginx.scrape-uri=http://nginx:8080/stub_status"]
     depends_on:
       nginx:
         condition: service_healthy
     networks:
       - app
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:9113/metrics || exit 1"]
-      interval: 10s
+      test: ["CMD", "/usr/bin/nginx-prometheus-exporter", "--version"]
+      interval: 30s
       timeout: 5s
-      retries: 5
+      retries: 3
       start_period: 10s
     deploy:
       resources:
@@ -306,7 +306,7 @@ services:
     networks:
       - app
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:8080/ || exit 1"]
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3

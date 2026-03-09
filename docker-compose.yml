@@ -66,6 +66,8 @@ services:
     cap_add:
       - SETUID
       - SETGID
+      - CHOWN
+      - DAC_OVERRIDE
     security_opt:
       - no-new-privileges:true
     stop_grace_period: 10s

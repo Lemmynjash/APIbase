@@ -123,12 +123,14 @@ pass "pipeline abort-before-provider invariant (verified by design)"
 # ---------------------------------------------------------------------------
 echo ""
 echo "Step 6: Restoring PostgreSQL to read-write mode"
+# Must connect to a different database (e.g. postgres) because
+# the target DB's default_transaction_read_only blocks ALTER DATABASE.
 $COMPOSE_CMD exec -T "$PG_SERVICE" \
-  psql -U "$PG_USER" -d "$PG_DB" -c "ALTER DATABASE $PG_DB SET default_transaction_read_only = off;" 2>/dev/null
+  psql -U "$PG_USER" -d postgres -c "ALTER DATABASE $PG_DB SET default_transaction_read_only = off;" 2>/dev/null
 
 # Terminate connections so they reconnect with new settings
 $COMPOSE_CMD exec -T "$PG_SERVICE" \
-  psql -U "$PG_USER" -d "$PG_DB" -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$PG_DB' AND pid <> pg_backend_pid();" 2>/dev/null || true
+  psql -U "$PG_USER" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$PG_DB' AND pid <> pg_backend_pid();" 2>/dev/null || true
 
 echo "  PG restored to read-write. Waiting for reconnection..."
 sleep 3

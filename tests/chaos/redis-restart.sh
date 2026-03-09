@@ -71,7 +71,7 @@ fi
 
 # Verify Redis is specifically reported as down
 HEALTH_BODY=$(curl -s "$API_URL/health/ready" 2>/dev/null || echo "{}")
-REDIS_STATUS=$(echo "$HEALTH_BODY" | jq -r '.checks.redis // "unknown"' 2>/dev/null || echo "unknown")
+REDIS_STATUS=$(echo "$HEALTH_BODY" | jq -r 'if .checks.redis == false then "false" elif .checks.redis == true then "true" else "unknown" end' 2>/dev/null || echo "unknown")
 if [ "$REDIS_STATUS" = "false" ]; then
   pass "health reports redis: false"
 else
@@ -137,7 +137,7 @@ fi
 # Verify Redis is back in health check
 if [ "$RECOVERED" = "true" ]; then
   HEALTH_BODY=$(curl -s "$API_URL/health/ready" 2>/dev/null || echo "{}")
-  REDIS_STATUS=$(echo "$HEALTH_BODY" | jq -r '.checks.redis // "unknown"' 2>/dev/null || echo "unknown")
+  REDIS_STATUS=$(echo "$HEALTH_BODY" | jq -r 'if .checks.redis == true then "true" elif .checks.redis == false then "false" else "unknown" end' 2>/dev/null || echo "unknown")
   if [ "$REDIS_STATUS" = "true" ]; then
     pass "health reports redis: true after recovery"
   else
