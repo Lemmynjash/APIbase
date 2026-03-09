@@ -115,7 +115,7 @@ tools:
     cache_ttl: 10
 
   - tool_id: polymarket.prices
-    name: Polymarket Prices
+    name: Polymarket Midpoint Price
     provider: polymarket
     price_usd: "0.0005"
     cache_ttl: 5
@@ -138,11 +138,38 @@ tools:
     price_usd: "0.0005"
     cache_ttl: 30
 
-  - tool_id: polymarket.leaderboard
-    name: Polymarket Leaderboard
+  # Polymarket Phase 2 — Trading (UC-001 §3-§8)
+  - tool_id: polymarket.place_order
+    name: Polymarket Place Order
+    provider: polymarket
+    price_usd: "0.001"
+    cache_ttl: 0
+
+  - tool_id: polymarket.cancel_order
+    name: Polymarket Cancel Order
+    provider: polymarket
+    price_usd: "0.001"
+    cache_ttl: 0
+
+  - tool_id: polymarket.open_orders
+    name: Polymarket Open Orders
     provider: polymarket
     price_usd: "0.0005"
-    cache_ttl: 60
+    cache_ttl: 0
+
+  - tool_id: polymarket.trade_history
+    name: Polymarket Trade History
+    provider: polymarket
+    price_usd: "0.0005"
+    cache_ttl: 5
+
+  - tool_id: polymarket.balance
+    name: Polymarket Balance
+    provider: polymarket
+    price_usd: "0.0005"
+    cache_ttl: 5
+
+  # polymarket.leaderboard — removed (Data API endpoint discontinued 2025+)
 
   # --- UC-002: Aviasales ---
   - tool_id: aviasales.search_flights

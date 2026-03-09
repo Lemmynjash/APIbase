@@ -40,17 +40,21 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
   { toolId: 'crypto.token_by_address', description: 'Get token info by contract address' },
   { toolId: 'crypto.search', description: 'Search for cryptocurrencies by name or symbol' },
 
-  // Polymarket (7)
+  // Polymarket (12: 7 read-only + 5 trading)
   { toolId: 'polymarket.search', description: 'Search prediction markets on Polymarket' },
   {
     toolId: 'polymarket.market_detail',
     description: 'Get detailed info about a prediction market',
   },
-  { toolId: 'polymarket.prices', description: 'Get current prices for prediction markets' },
+  { toolId: 'polymarket.prices', description: 'Get midpoint price for a prediction market token' },
   { toolId: 'polymarket.price_history', description: 'Get price history for a prediction market' },
   { toolId: 'polymarket.get_orderbook', description: 'Get order book for a prediction market' },
   { toolId: 'polymarket.trending', description: 'Get trending prediction markets' },
-  { toolId: 'polymarket.leaderboard', description: 'Get Polymarket trader leaderboard' },
+  { toolId: 'polymarket.place_order', description: 'Place a limit order on Polymarket' },
+  { toolId: 'polymarket.cancel_order', description: 'Cancel an open order on Polymarket' },
+  { toolId: 'polymarket.open_orders', description: 'Get open orders on Polymarket' },
+  { toolId: 'polymarket.trade_history', description: 'Get trade history on Polymarket' },
+  { toolId: 'polymarket.balance', description: 'Get balance/allowance on Polymarket' },
 
   // Aviasales (7)
   { toolId: 'aviasales.search_flights', description: 'Search for flights between airports' },

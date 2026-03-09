@@ -41,6 +41,13 @@ export const appEnvSchema = z.object({
   PROVIDER_KEY_COINGECKO: z.string().min(1),
   PROVIDER_KEY_POLYMARKET: z.string().optional().default(''),
   PROVIDER_KEY_AVIASALES: z.string().optional().default(''),
+
+  // Polymarket trading — Phase 2 (UC-001 §3-§8)
+  POLYMARKET_WALLET_ADDRESS: z.string().startsWith('0x').optional().default(''),
+  POLYMARKET_PRIVATE_KEY: z.string().optional().default(''),
+  POLYMARKET_BUILDER_API_KEY: z.string().optional().default(''),
+  POLYMARKET_BUILDER_SECRET: z.string().optional().default(''),
+  POLYMARKET_BUILDER_PASSPHRASE: z.string().optional().default(''),
 });
 
 export type AppEnv = z.infer<typeof appEnvSchema>;

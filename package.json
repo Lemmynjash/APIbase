@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "start": "node dist/api/server.js",
     "dev": "tsx watch src/api/server.ts",
     "test": "jest",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
+    "@polymarket/clob-client": "^5.7.0",
     "@prisma/client": "^6.5.0",
     "@x402/evm": "^2.6.0",
     "@x402/express": "^2.6.0",

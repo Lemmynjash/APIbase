@@ -6,9 +6,10 @@
 |-------|-------|
 | **ID** | UC-001 |
 | **Provider** | Polymarket (polymarket.com) |
-| **Category** | Predictions / Analytics |
+| **Category** | Predictions / Analytics / Trading |
 | **Date Added** | 2026-03-07 |
-| **Status** | Reference |
+| **Phase 2 (Trading)** | 2026-03-09 |
+| **Status** | Production (Phase 1 + Phase 2) |
 | **Client** | Alpush (Polymarket Developer) |
 
 ---
@@ -21,23 +22,25 @@ Client (Alpush) предоставил APIbase:
 Тип данных:          Значение:
 ──────────────────────────────────────────────────────────
 Profile              Alpush (Developer, polymarket.com)
-Wallet Address       0x228d6704ae66cb7ed07a1e5d4d51a8e385777abb
-Builder API Key #1   019c6ff4-86ee-7725-b85d-80fd1aab3d38 (Active)
-Builder API Key #2   019c6ff4-c375-77c5-9b84-8ec82123df08 (Active)
-Builder API Key #3   019c7468-929f-7602-b7fa-bc2561f08fe9 (Active)
+Trading Wallet       0xc98dDC93e5d97Be00306a305F53BE802c6EdeAbB
+Private Key          Configured in .env (POLYMARKET_PRIVATE_KEY)
+Builder API Key      019cd1d3-d2e9-78eb-ba8d-0090d0d6bcd4 (Active)
+Builder Secret       Configured in .env (POLYMARKET_BUILDER_SECRET)
+Builder Passphrase   Configured in .env (POLYMARKET_BUILDER_PASSPHRASE)
+CLOB L2 Credentials  Derived at runtime via createOrDeriveApiKey()
 Registration Date    18.02.2026
-Confirmed            No
+Phase 2 Enabled      2026-03-09
 ```
 
 ### Sufficiency Assessment
 
 | Data provided | What it enables | Sufficient? |
 |---------------|----------------|-------------|
-| 3x Builder API Keys | Attribution of all trading volume to Alpush's app. Builder leaderboard. Gasless transactions via relayer. | **Yes** — for read-only API + trade attribution |
-| Wallet Address | Public identifier for on-chain verification | **Yes** |
-| CLOB credentials (apiKey, secret, passphrase) | Placing/canceling orders on behalf of end users | **Not provided** — needed for full trading API |
+| Builder API Key + Secret + Passphrase | Full Builder attribution with HMAC signing. Revenue share from Polymarket. | **Yes** |
+| Trading Wallet + Private Key | L1 EIP-712 signing for L2 credential derivation. Order signing. | **Yes** |
+| CLOB L2 Credentials (derived) | Placing/canceling orders, querying portfolio. Derived automatically from private key at startup. | **Yes** (auto-derived) |
 
-**Verdict:** Provided data is **sufficient for MVP** (read-only market data + trade attribution covering ~80% of agent use cases). For full trading API, CLOB credentials are additionally required.
+**Verdict:** All credentials provided. **Full trading API operational** (Phase 2 complete). Both read-only market data AND order placement/cancellation with Builder revenue attribution.
 
 ---
 
@@ -45,14 +48,13 @@ Confirmed            No
 
 ### API Architecture
 
-Polymarket operates 4 separate API services on Polygon blockchain (Chain ID: 137):
+Polymarket operates 3 active API services on Polygon blockchain (Chain ID: 137):
 
 | Service | Base URL | Auth | Description |
 |---------|----------|------|-------------|
 | **Gamma API** | `https://gamma-api.polymarket.com` | No | Market data, events, search |
-| **CLOB API** | `https://clob.polymarket.com` | Partial (read=no, trade=yes) | Order book, prices, trading |
-| **Data API** | `https://data-api.polymarket.com` | No | Positions, analytics, leaderboard |
-| **WebSocket** | `wss://ws-subscriptions-clob.polymarket.com/ws/` | Partial | Real-time price/orderbook/trade updates |
+| **CLOB API** | `https://clob.polymarket.com` | Partial (read=no, trade=L2+Builder) | Order book, prices, trading |
+| **Data API** | `https://data-api.polymarket.com` | No | Positions, analytics (leaderboard discontinued 2025+) |
 
 ### Key Endpoints
 
@@ -82,43 +84,31 @@ Polymarket operates 4 separate API services on Polygon blockchain (Chain ID: 137
 | `/tick-size` | GET | Tick size for a market |
 | `/spread` | GET | Spread for a market |
 
-#### CLOB API — Authenticated (L2 required)
+#### CLOB API — Authenticated (L2 + Builder required)
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/order` | POST | Place a single order (GTC) |
-| `/orders` | POST | Place batch orders (up to 15/request) |
-| `/order` | DELETE | Cancel a single order |
-| `/orders` | DELETE | Cancel multiple orders (up to 3000) |
-| `/cancel-all` | DELETE | Cancel all open orders |
-| `/open-orders` | GET | Retrieve open orders |
-| `/trades` | GET | Trade history |
-| `/balance-allowance` | GET | Check balance/allowance |
-
-#### Data API (Analytics — No Auth)
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/activity` | GET | On-chain activity (trade, split, merge, redeem) |
-| `/positions` | GET | Current user positions |
-| `/closed-positions` | GET | Closed positions |
-| `/trades` | GET | Trade history |
-| `/leaderboard` | GET | Leaderboard rankings |
-| `/profiles` | GET | Public profile data |
+| Endpoint | Method | Description | APIbase tool |
+|----------|--------|-------------|-------------|
+| `/order` | POST | Place a single order (GTC/GTD/FOK) | `polymarket.place_order` |
+| `/order` | DELETE | Cancel a single order | `polymarket.cancel_order` |
+| `/open-orders` | GET | Retrieve open orders | `polymarket.open_orders` |
+| `/trades` | GET | Trade history | `polymarket.trade_history` |
+| `/balance-allowance` | GET | Check balance/allowance | `polymarket.balance` |
 
 ### Authentication Model
 
-**Two-tier system:**
+**Three-tier system (all handled by `@polymarket/clob-client` SDK):**
 
-- **L1 (Private Key):** EIP-712 signed messages. For creating API credentials.
+- **L1 (Private Key):** EIP-712 signed messages. For creating/deriving L2 credentials.
   - Headers: `POLY_ADDRESS`, `POLY_SIGNATURE`, `POLY_TIMESTAMP`, `POLY_NONCE`
+  - Used once at startup for credential derivation
 - **L2 (API Key):** HMAC-SHA256 with derived credentials (apiKey, secret, passphrase).
   - Headers: `POLY_ADDRESS`, `POLY_SIGNATURE`, `POLY_TIMESTAMP`, `POLY_API_KEY`, `POLY_PASSPHRASE`
+  - Used for every authenticated request
+- **Builder (Revenue Attribution):** HMAC-SHA256 with Builder credentials.
+  - Headers: `POLY_BUILDER_API_KEY`, `POLY_BUILDER_TIMESTAMP`, `POLY_BUILDER_PASSPHRASE`, `POLY_BUILDER_SIGNATURE`
+  - Appended to trading requests for volume attribution and revenue
 
-**Builder API Keys** (what client provided) — separate credential type:
-- Order attribution (tracking which app generated volume)
-- Gasless transaction capabilities via relayer
-- Builder leaderboard placement
+Total: 9 headers per trading request, 2 different EIP-712 domains, custom HMAC construction. All handled by the SDK.
 
 ### Rate Limits
 
@@ -134,13 +124,10 @@ Polymarket operates 4 separate API services on Polygon blockchain (Chain ID: 137
 | `GET /markets` | 300 req / 10 sec |
 | `GET /public-search` | 350 req / 10 sec |
 | Data API General | 1,000 req / 10 sec |
-| `GET /trades` | 200 req / 10 sec |
-| `GET /positions` | 150 req / 10 sec |
-| Relayer `/submit` | 25 req / min |
 
 ### Official SDKs
 
-- TypeScript: `@polymarket/clob-client` (npm)
+- TypeScript: `@polymarket/clob-client` (npm) — **used by APIbase**
 - Python: `py-clob-client` (pip)
 - Docs: `docs.polymarket.com`
 
@@ -153,25 +140,32 @@ Polymarket operates 4 separate API services on Polygon blockchain (Chain ID: 137
 ```
 What the adapter does:
 ──────────────────────────────────────────────────────────────
-• Unifies 4 Polymarket services → single APIbase endpoint
+• Unifies 2 Polymarket services → single APIbase endpoint
   apibase.pro/api/v1/polymarket/...
 
 • Request routing:
-  /polymarket/events     → gamma-api.polymarket.com/events
-  /polymarket/prices     → clob.polymarket.com/prices
-  /polymarket/positions  → data-api.polymarket.com/positions
+  Phase 1 (read-only):
+    polymarket.search         → gamma-api.polymarket.com/public-search
+    polymarket.market_detail  → gamma-api.polymarket.com/markets/{id}
+    polymarket.prices         → clob.polymarket.com/midpoint
+    polymarket.get_orderbook  → clob.polymarket.com/book
+    polymarket.price_history  → clob.polymarket.com/prices-history
+    polymarket.trending       → gamma-api.polymarket.com/markets
 
-• Rate limit management:
-  - Per-agent quota (fraction of Polymarket's global limits)
-  - Request queuing when approaching limits
-  - 429 handling with automatic retry + exponential backoff
+  Phase 2 (trading via @polymarket/clob-client SDK):
+    polymarket.place_order    → ClobClient.createAndPostOrder()
+    polymarket.cancel_order   → ClobClient.cancelOrder()
+    polymarket.open_orders    → ClobClient.getOpenOrders()
+    polymarket.trade_history  → ClobClient.getTrades()
+    polymarket.balance        → ClobClient.getBalanceAllowance()
 
 • Caching strategy:
-  - Market list: 30 sec TTL (changes rarely)
-  - Prices: 2 sec TTL (near-real-time)
-  - Order book: 1 sec TTL (fast-changing)
-  - Historical data: 5 min TTL (static)
-  - Events metadata: 60 sec TTL
+  - Market list / search: 30 sec TTL
+  - Prices: 5 sec TTL
+  - Order book: 0 sec (no cache)
+  - Historical data: 30 sec TTL
+  - Trading operations: 0 sec (never cached)
+  - Trade history / balance: 5 sec TTL
 
 • Error normalization:
   Polymarket errors → APIbase standard error format
@@ -202,39 +196,6 @@ What the adapter does:
   "conditionId": "0xabcd...",
   "endDate": "2026-12-31T23:59:59Z"
 }
-
-// === APIbase normalized (prediction-market schema) ===
-{
-  "provider": "polymarket",
-  "provider_id": "0x1234...",
-  "market_id": "apibase_pm_0x1234",
-  "question": "Will Bitcoin hit $100k in 2026?",
-  "type": "binary",
-  "status": "active",
-  "outcomes": [
-    {
-      "label": "Yes",
-      "probability": 0.73,
-      "price": 0.73,
-      "best_bid": 0.72,
-      "best_ask": 0.74
-    },
-    {
-      "label": "No",
-      "probability": 0.27,
-      "price": 0.27,
-      "best_bid": 0.26,
-      "best_ask": 0.28
-    }
-  ],
-  "volume_usd": 5432100.50,
-  "volume_24h_usd": 234500.00,
-  "open_interest_usd": 1200000.00,
-  "end_date": "2026-12-31T23:59:59Z",
-  "source_url": "https://polymarket.com/event/...",
-  "tick_size": 0.01,
-  "last_updated": "2026-03-07T14:30:00Z"
-}
 ```
 
 ### Level 3: Builder Key Injector
@@ -243,253 +204,57 @@ What the adapter does:
 For every trading request through APIbase:
 ──────────────────────────────────────────────────────────────
 1. Agent sends trade request to APIbase
-2. APIbase injects Alpush's Builder API Key into request headers
-3. Order is submitted to Polymarket CLOB with Builder attribution
-4. Polymarket attributes the trading volume to "Alpush"
-5. Alpush earns Builder rewards from Polymarket
-6. APIbase logs the transaction and charges API usage fee
+2. APIbase uses ClobClient singleton with BuilderConfig
+3. SDK automatically injects Builder HMAC headers (4 headers)
+4. SDK signs order with L2 credentials (5 headers)
+5. SDK signs the order itself with EIP-712
+6. Order is submitted to Polymarket CLOB with full Builder attribution
+7. Polymarket attributes the trading volume to Builder key
+8. APIbase logs the transaction and charges API usage fee via x402
 
-Builder Key rotation:
-- Key #1 (019c6ff4-86ee...) — primary, used for all requests
-- Key #2 (019c6ff4-c375...) — failover if Key #1 is rate-limited
-- Key #3 (019c7468-929f...) — failover if Key #2 is rate-limited
+Builder credentials:
+  API Key:    019cd1d3-d2e9-78eb-ba8d-0090d0d6bcd4
+  Secret:     Configured in .env
+  Passphrase: Configured in .env
 ```
 
 ---
 
 ## 4. MCP Tool Definitions
 
-### Tool: polymarket-search
+### Phase 1 — Read-Only (6 tools)
 
-```json
-{
-  "name": "polymarket-search",
-  "description": "Search prediction markets on Polymarket. Find markets about politics, crypto, sports, economics, geopolitics and more. Returns current probabilities, trading volume, and market details.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "query": {
-        "type": "string",
-        "description": "Natural language search query, e.g. 'Bitcoin price 2026' or 'US presidential election'"
-      },
-      "category": {
-        "type": "string",
-        "enum": ["politics", "crypto", "sports", "finance", "science", "culture", "geopolitics", "iran", "economics"],
-        "description": "Filter by category (optional)"
-      },
-      "status": {
-        "type": "string",
-        "enum": ["active", "resolved", "all"],
-        "default": "active",
-        "description": "Market status filter"
-      },
-      "sort_by": {
-        "type": "string",
-        "enum": ["volume", "newest", "ending_soon", "probability_high", "probability_low"],
-        "default": "volume",
-        "description": "Sort order"
-      },
-      "limit": {
-        "type": "integer",
-        "default": 10,
-        "maximum": 100,
-        "description": "Number of results"
-      }
-    },
-    "required": ["query"]
-  }
-}
-```
+| tool_id | Description | Price | cache_ttl |
+|---------|-------------|-------|-----------|
+| `polymarket.search` | Search prediction markets | $0.0005 | 30s |
+| `polymarket.market_detail` | Get market details | $0.0005 | 10s |
+| `polymarket.prices` | Get midpoint price for a token | $0.0005 | 5s |
+| `polymarket.price_history` | Get price history | $0.0005 | 30s |
+| `polymarket.get_orderbook` | Get order book | $0.0005 | 0s |
+| `polymarket.trending` | Get trending markets | $0.0005 | 30s |
 
-### Tool: polymarket-market-detail
+### Phase 2 — Trading (5 tools)
 
-```json
-{
-  "name": "polymarket-market-detail",
-  "description": "Get detailed information about a specific Polymarket prediction market including current probability, volume, order book depth, and historical price data.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "market_id": {
-        "type": "string",
-        "description": "Market ID from polymarket-search results"
-      },
-      "include_orderbook": {
-        "type": "boolean",
-        "default": false,
-        "description": "Include order book depth data"
-      },
-      "include_history": {
-        "type": "boolean",
-        "default": false,
-        "description": "Include price history (last 30 days)"
-      }
-    },
-    "required": ["market_id"]
-  }
-}
-```
+| tool_id | Description | Price | cache_ttl |
+|---------|-------------|-------|-----------|
+| `polymarket.place_order` | Place a limit order (GTC/GTD/FOK) | $0.001 | 0s |
+| `polymarket.cancel_order` | Cancel an open order | $0.001 | 0s |
+| `polymarket.open_orders` | Get open orders | $0.0005 | 0s |
+| `polymarket.trade_history` | Get trade history | $0.0005 | 5s |
+| `polymarket.balance` | Get balance/allowance | $0.0005 | 5s |
 
-### Tool: polymarket-prices
-
-```json
-{
-  "name": "polymarket-prices",
-  "description": "Get current prices (probabilities) for one or more Polymarket markets. Prices represent implied probabilities: 0.73 = 73% chance.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "market_ids": {
-        "type": "array",
-        "items": {"type": "string"},
-        "description": "List of market IDs to get prices for",
-        "maxItems": 50
-      }
-    },
-    "required": ["market_ids"]
-  }
-}
-```
-
-### Tool: polymarket-price-history
-
-```json
-{
-  "name": "polymarket-price-history",
-  "description": "Get historical price data for a Polymarket market. Useful for analyzing trends, identifying momentum, and understanding how probabilities have changed over time.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "market_id": {
-        "type": "string",
-        "description": "Market ID"
-      },
-      "interval": {
-        "type": "string",
-        "enum": ["1h", "4h", "1d", "1w"],
-        "default": "1d",
-        "description": "Candle interval"
-      },
-      "days": {
-        "type": "integer",
-        "default": 30,
-        "maximum": 365,
-        "description": "Number of days of history"
-      }
-    },
-    "required": ["market_id"]
-  }
-}
-```
-
-### Tool: polymarket-orderbook
-
-```json
-{
-  "name": "polymarket-orderbook",
-  "description": "Get the order book for a Polymarket market. Shows bid/ask depth and spread. Useful for assessing market liquidity before placing large orders.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "market_id": {
-        "type": "string",
-        "description": "Market ID"
-      },
-      "depth": {
-        "type": "integer",
-        "default": 10,
-        "maximum": 50,
-        "description": "Order book depth (number of price levels)"
-      }
-    },
-    "required": ["market_id"]
-  }
-}
-```
-
-### Tool: polymarket-trending
-
-```json
-{
-  "name": "polymarket-trending",
-  "description": "Get trending and popular prediction markets on Polymarket. Sorted by 24h volume, new markets, or biggest probability changes.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "sort_by": {
-        "type": "string",
-        "enum": ["volume_24h", "newest", "biggest_move", "ending_soon"],
-        "default": "volume_24h",
-        "description": "How to rank trending markets"
-      },
-      "category": {
-        "type": "string",
-        "enum": ["politics", "crypto", "sports", "finance", "science", "culture", "geopolitics"],
-        "description": "Filter by category (optional)"
-      },
-      "limit": {
-        "type": "integer",
-        "default": 10,
-        "maximum": 50
-      }
-    },
-    "required": []
-  }
-}
-```
-
-### Tool: polymarket-leaderboard
-
-```json
-{
-  "name": "polymarket-leaderboard",
-  "description": "Get the Polymarket trading leaderboard. Shows top traders by profit, volume, or number of markets traded.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "sort_by": {
-        "type": "string",
-        "enum": ["profit", "volume", "markets_traded"],
-        "default": "profit"
-      },
-      "period": {
-        "type": "string",
-        "enum": ["24h", "7d", "30d", "all_time"],
-        "default": "7d"
-      },
-      "limit": {
-        "type": "integer",
-        "default": 20,
-        "maximum": 100
-      }
-    },
-    "required": []
-  }
-}
-```
-
-### Tool: polymarket-place-order (Requires KYA Verified + CLOB credentials)
+### Tool: polymarket-place-order (Phase 2)
 
 ```json
 {
   "name": "polymarket-place-order",
-  "description": "Place a limit order on a Polymarket prediction market. Requires KYA Verified level and CLOB credentials. All orders are attributed to the Builder Key for volume tracking.",
+  "description": "Place a limit order on a Polymarket prediction market. Orders are signed with EIP-712 and attributed to Builder for revenue. Supports GTC (Good Till Cancelled), GTD (Good Till Date), and FOK (Fill or Kill) order types.",
   "inputSchema": {
     "type": "object",
     "properties": {
-      "market_id": {
+      "token_id": {
         "type": "string",
-        "description": "Market ID to trade"
-      },
-      "outcome": {
-        "type": "string",
-        "enum": ["Yes", "No"],
-        "description": "Which outcome to buy"
-      },
-      "side": {
-        "type": "string",
-        "enum": ["buy", "sell"],
-        "description": "Buy or sell"
+        "description": "Conditional token ID (from market clobTokenIds)"
       },
       "price": {
         "type": "number",
@@ -497,13 +262,114 @@ Builder Key rotation:
         "maximum": 0.99,
         "description": "Limit price (0.01-0.99, represents probability)"
       },
-      "amount_usd": {
+      "side": {
+        "type": "string",
+        "enum": ["buy", "sell"],
+        "description": "Buy or sell"
+      },
+      "size": {
         "type": "number",
         "minimum": 1,
-        "description": "Order size in USD"
+        "description": "Order size in conditional tokens"
+      },
+      "order_type": {
+        "type": "string",
+        "enum": ["GTC", "GTD", "FOK"],
+        "default": "GTC",
+        "description": "Order type"
+      },
+      "tick_size": {
+        "type": "string",
+        "default": "0.01",
+        "description": "Tick size for the market"
+      },
+      "neg_risk": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether this is a neg-risk market"
       }
     },
-    "required": ["market_id", "outcome", "side", "price", "amount_usd"]
+    "required": ["token_id", "price", "side", "size"]
+  }
+}
+```
+
+### Tool: polymarket-cancel-order
+
+```json
+{
+  "name": "polymarket-cancel-order",
+  "description": "Cancel an open order on Polymarket by order ID.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "order_id": {
+        "type": "string",
+        "description": "Order ID to cancel"
+      }
+    },
+    "required": ["order_id"]
+  }
+}
+```
+
+### Tool: polymarket-open-orders
+
+```json
+{
+  "name": "polymarket-open-orders",
+  "description": "Get all open orders on Polymarket, optionally filtered by market.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "market_id": {
+        "type": "string",
+        "description": "Filter by market condition ID (optional)"
+      }
+    }
+  }
+}
+```
+
+### Tool: polymarket-trade-history
+
+```json
+{
+  "name": "polymarket-trade-history",
+  "description": "Get trade history on Polymarket, optionally filtered by market.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "market_id": {
+        "type": "string",
+        "description": "Filter by market condition ID (optional)"
+      },
+      "limit": {
+        "type": "integer",
+        "default": 100,
+        "maximum": 100,
+        "description": "Maximum number of trades to return"
+      }
+    }
+  }
+}
+```
+
+### Tool: polymarket-balance
+
+```json
+{
+  "name": "polymarket-balance",
+  "description": "Get balance and allowance for USDC collateral or conditional tokens on Polymarket.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "asset_type": {
+        "type": "string",
+        "enum": ["COLLATERAL", "CONDITIONAL"],
+        "description": "Asset type to check balance for"
+      }
+    }
   }
 }
 ```
@@ -521,6 +387,7 @@ Builder Key rotation:
 - User needs predictions or forecasts based on crowd wisdom
 - User wants to analyze prediction market trends
 - User asks about betting odds or prediction market data
+- User wants to place or manage prediction market orders
 
 ## Key Concept
 Polymarket is a prediction market. Prices = implied probabilities.
@@ -530,134 +397,93 @@ For binary markets (Yes/No), prices always sum to ~1.00.
 ## Recommended Call Chains
 
 ### "What's the probability of X?"
-1. `polymarket-search` (query="X") → find relevant markets
+1. `polymarket-search` (query="X") -> find relevant markets
 2. Return probability from results
 
 ### "Analyze the trend for X"
-1. `polymarket-search` (query="X") → find market
-2. `polymarket-price-history` (market_id, interval="1d", days=30) → get trend
+1. `polymarket-search` (query="X") -> find market
+2. `polymarket-price-history` (market_id, interval="1d", days=30) -> get trend
 3. Analyze and describe the trend
 
 ### "Is it a good bet to buy Yes on X?"
-1. `polymarket-search` (query="X") → find market
-2. `polymarket-market-detail` (market_id, include_orderbook=true) → get depth
-3. `polymarket-price-history` (market_id) → get trend
+1. `polymarket-search` (query="X") -> find market
+2. `polymarket-market-detail` (market_id, include_orderbook=true) -> get depth
+3. `polymarket-price-history` (market_id) -> get trend
 4. Analyze: current price, trend direction, liquidity depth, spread
 
 ### "What's trending in prediction markets?"
-1. `polymarket-trending` (sort_by="volume_24h") → top markets
-2. Optionally: `polymarket-trending` (sort_by="biggest_move") → biggest movers
+1. `polymarket-trending` (sort_by="volume_24h") -> top markets
+2. Optionally: `polymarket-trending` (sort_by="biggest_move") -> biggest movers
 
-### "Place a bet on X"
-1. `polymarket-search` (query="X") → find market
-2. `polymarket-market-detail` (include_orderbook=true) → check liquidity
-3. `polymarket-place-order` (market_id, outcome, side, price, amount)
-   ⚠️ Requires KYA Verified + CLOB credentials
-   ⚠️ Confirm with user before placing order
+### "Place a bet on X" (Phase 2)
+1. `polymarket-search` (query="X") -> find market
+2. `polymarket-market-detail` (include_orderbook=true) -> get token_id + liquidity
+3. `polymarket-balance` (asset_type="COLLATERAL") -> check USDC balance
+4. `polymarket-place-order` (token_id, price, side="buy", size)
+
+### "What are my open orders?"
+1. `polymarket-open-orders` -> list all open orders
+2. Optionally: `polymarket-open-orders` (market_id) -> filter by market
+
+### "Cancel order X"
+1. `polymarket-cancel-order` (order_id="...") -> cancel specific order
+
+### "Show my trade history"
+1. `polymarket-trade-history` (limit=20) -> recent trades
 
 ## Response Formatting
 - Always show probability as percentage: "73%" not "0.73"
 - Include 24h volume to indicate market liquidity/reliability
-- For trends: "↑ +5% over 7 days" or "↓ -3% over 24h"
+- For trends: "up +5% over 7 days" or "down -3% over 24h"
 - Note the number of traders for context ("2,400 traders")
 - Always caveat: "This is market sentiment, not a guaranteed outcome"
+- For trades: confirm order details before placing
 
 ## Limitations
 - Polymarket data is market-driven, not factual — markets can be wrong
 - Low-volume markets (<$10k) may have unreliable probabilities
 - Prices can be manipulated in illiquid markets
-- Trading operations require additional credentials and KYA verification
 - Historical data may have gaps during low-activity periods
 
 ## Pricing via APIbase
-- Read operations (search, prices, history): Free tier (1000 req/month)
-- Read operations above free tier: $0.0005 per request (x402)
+- Read operations: $0.0005 per request (x402)
 - Trade operations: $0.001 per order (x402)
-- WebSocket real-time: $0.01/hour connected (x402)
 ```
 
 ---
 
-## 6. Publication
+## 6. Implementation Details
 
-### APIbase.pro Catalog Entry
+### Source Files
 
-```
-URL: apibase.pro/catalog/predictions/polymarket/
-──────────────────────────────────────────────────────────────
-Provider:       Polymarket
-Website:        polymarket.com
-Category:       Predictions / Analytics
-Subcategories:  Politics, Crypto, Sports, Finance, Geopolitics
+| File | Purpose |
+|------|---------|
+| `src/adapters/polymarket/index.ts` | Main adapter — routes read-only (raw HTTP) and trading (SDK) calls |
+| `src/adapters/polymarket/clob-client.ts` | Singleton ClobClient with lazy init, L2 derivation, Builder config |
+| `src/adapters/polymarket/trading.ts` | 5 trading tool handlers using ClobClient SDK |
+| `src/adapters/polymarket/types.ts` | TypeScript types for Gamma/CLOB API responses |
+| `src/schemas/polymarket.schema.ts` | Zod schemas for all 11 tools |
+| `src/mcp/tool-adapter.ts` | MCP tool registrations (12 Polymarket entries) |
+| `config/tool_provider_config.yaml` | Tool pricing and cache TTL config |
 
-Status:         Active ✅
-MCP Tools:      8 tools (search, market-detail, prices, price-history,
-                orderbook, trending, leaderboard, place-order)
-Formats:        MCP Tool Definition, OpenAPI 3.1, A2A Agent Card
+### Dependencies
 
-Pricing:
-  Read (free tier):    1000 req/month
-  Read (paid):         $0.0005/req via x402
-  Trade:               $0.001/order via x402
+- `@polymarket/clob-client` — SDK for CLOB API (signing, order creation, Builder attribution)
+- `viem` — Ethereum wallet client (transitive, used for EIP-712 signing)
+- `@polymarket/builder-signing-sdk` — Builder HMAC signing (transitive)
 
-Authentication:  OAuth 2.1 via APIbase (agent registration required)
-Data freshness:  Prices: 2 sec | Markets: 30 sec | History: 5 min
-Rate limits:     Per-agent, based on KYA level
-Auto-sync:       Daily (market list), real-time (prices)
-```
-
-### GitHub Public Entry
+### Architecture
 
 ```
-github.com/apibase-pro/apibase/apis/predictions/polymarket/
-│
-├── README.md
-│   # Polymarket — Prediction Markets API
-│   Polymarket is the world's largest prediction market platform.
-│   Through APIbase, AI agents can search markets, get real-time
-│   probabilities, analyze trends, and execute trades.
-│
-│   ## Available Tools
-│   - polymarket-search: Search prediction markets
-│   - polymarket-market-detail: Get market details
-│   - polymarket-prices: Current probabilities
-│   - polymarket-price-history: Historical trends
-│   - polymarket-orderbook: Order book depth
-│   - polymarket-trending: Trending markets
-│   - polymarket-leaderboard: Top traders
-│   - polymarket-place-order: Execute trades (requires verification)
-│
-│   ## Quick Start
-│   POST apibase.pro/api/v1/discover {"query": "prediction markets"}
-│
-│   ## Categories
-│   Politics, Crypto, Sports, Finance, Science, Culture, Geopolitics
-│
-├── capabilities.json
-│   {
-│     "provider": "polymarket",
-│     "category": "predictions",
-│     "tools_count": 8,
-│     "read_auth_required": false,
-│     "trade_auth_required": true,
-│     "x402_enabled": true,
-│     "real_time": true,
-│     "websocket": true
-│   }
-│
-└── examples.md
-    # Examples
-    ## Search for Bitcoin markets
-    POST /api/v1/polymarket/search {"query": "Bitcoin 100k"}
-
-    ## Get trending markets
-    GET /api/v1/polymarket/trending?sort_by=volume_24h&limit=5
-
-    ## Get price history
-    GET /api/v1/polymarket/price-history?market_id=...&interval=1d&days=30
+Agent Request → 13-stage Pipeline → PolymarketAdapter.call()
+                                          │
+                                          ├── isTradingTool? YES → executeTradingCall()
+                                          │                         → getClobClient() [singleton]
+                                          │                         → SDK handles signing + HTTP
+                                          │
+                                          └── isTradingTool? NO  → super.call() [base adapter]
+                                                                   → raw HTTP fetch
 ```
-
-**Not published on GitHub:** Builder API keys, wrapper implementation, caching logic, rate limit distribution algorithm.
 
 ---
 
@@ -667,72 +493,45 @@ github.com/apibase-pro/apibase/apis/predictions/polymarket/
 
 ```
 AI Agent                    APIbase.pro                     Polymarket
-    │                           │                               │
-    │── polymarket-search ─────→│                               │
-    │   query="Bitcoin 100k"    │                               │
-    │   Accept: application/json│                               │
-    │   Authorization: Bearer...│                               │
-    │                           │── Verify agent (OAuth 2.1) ──→│ (internal)
-    │                           │── Check rate limit ──────────→│ (internal)
-    │                           │── Check cache ───────────────→│ (internal)
-    │                           │                               │
-    │                           │   [cache miss]                │
-    │                           │                               │
-    │                           │── GET /public-search ────────→│
-    │                           │   ?query=Bitcoin+100k          │ gamma-api
-    │                           │←── 200 OK [Polymarket JSON] ──│
-    │                           │                               │
-    │                           │   [normalize → APIbase schema]│
-    │                           │   [cache result, TTL=30s]     │
-    │                           │   [log: agent_id, endpoint,   │
-    │                           │    latency, cache_hit=false]  │
-    │                           │                               │
-    │←── 200 OK ────────────────│                               │
-    │   [{                      │                               │
-    │     provider: "polymarket",│                              │
-    │     question: "Will BTC...",│                             │
-    │     probability: 0.73,    │                               │
-    │     volume_24h: 234500    │                               │
-    │   }, ...]                 │                               │
+    |                           |                               |
+    |-- polymarket-search ----→ |                               |
+    |   query="Bitcoin 100k"   |                               |
+    |                           |-- 13-stage pipeline --------→ | (internal)
+    |                           |                               |
+    |                           |   [cache miss]                |
+    |                           |                               |
+    |                           |-- GET /public-search -------→ |
+    |                           |   ?q=Bitcoin+100k             | gamma-api
+    |                           |←-- 200 OK [JSON] ----------- |
+    |                           |                               |
+    |                           |   [cache result, TTL=30s]     |
+    |                           |   [ledger write]              |
+    |                           |                               |
+    |←-- 200 OK --------------- |                               |
 ```
 
-### Trade Request (place order — requires CLOB credentials)
+### Trade Request (Phase 2 — via ClobClient SDK)
 
 ```
 AI Agent                    APIbase.pro                     Polymarket
-    │                           │                               │
-    │── polymarket-place-order─→│                               │
-    │   market_id="0x1234..."   │                               │
-    │   outcome="Yes"           │                               │
-    │   price=0.73, amount=$50  │                               │
-    │                           │── Verify KYA level ≥ Verified │ (internal)
-    │                           │── Check spending limits ──────│ (internal)
-    │                           │── Check: amount < threshold?──│ (internal)
-    │                           │                               │
-    │                           │   [amount $50 < $100 threshold│
-    │                           │    → auto-approve]            │
-    │                           │                               │
-    │                           │── POST /order ───────────────→│
-    │                           │   Headers:                    │ clob API
-    │                           │     POLY_API_KEY: [CLOB key]  │
-    │                           │     POLY_PASSPHRASE: [...]    │
-    │                           │     Builder-Key: 019c6ff4-... │ ← Alpush's key
-    │                           │                               │
-    │                           │←── 200 OK {order_id: "..."} ─│
-    │                           │                               │
-    │                           │   [log: trade, amount, fees]  │
-    │                           │   [charge x402: $0.001]       │
-    │                           │   [attribute to Builder]      │
-    │                           │                               │
-    │←── 200 OK ────────────────│                               │
-    │   {                       │                               │
-    │     status: "placed",     │                               │
-    │     order_id: "...",      │                               │
-    │     outcome: "Yes",       │                               │
-    │     price: 0.73,          │                               │
-    │     amount: 50,           │                               │
-    │     fee: 0.001            │                               │
-    │   }                       │                               │
+    |                           |                               |
+    |-- polymarket-place-order→ |                               |
+    |   token_id, price, side   |                               |
+    |                           |-- 13-stage pipeline --------→ | (internal)
+    |                           |   ESCROW → hold $0.001        |
+    |                           |                               |
+    |                           |-- ClobClient.createAndPost()→ |
+    |                           |   [SDK signs EIP-712 order]   | clob API
+    |                           |   [SDK adds L2 HMAC headers]  |
+    |                           |   [SDK adds Builder headers]  |
+    |                           |   9 auth headers total         |
+    |                           |←-- 200 OK {order_id} -------- |
+    |                           |                               |
+    |                           |   ESCROW_FINALIZE + LEDGER    |
+    |                           |   [one PG transaction]        |
+    |                           |                               |
+    |←-- 200 OK --------------- |                               |
+    |   {order_id, status}      |                               |
 ```
 
 ---
@@ -741,14 +540,13 @@ AI Agent                    APIbase.pro                     Polymarket
 
 | Revenue Stream | Mechanism | Expected per Month |
 |---------------|-----------|-------------------|
-| **API Usage Fee (read)** | $0.0005/req after free tier of 1000 req/month | $50–500 (early stage) |
-| **API Usage Fee (trade)** | $0.001 per trade order via x402 | $10–100 (early stage) |
-| **Builder Rewards** | Polymarket pays Builder rewards to Alpush based on attributed volume. APIbase revenue share agreement with Alpush (e.g., 70/30). | Variable |
-| **Premium data** | Real-time WebSocket feeds, $0.01/hour | $20–200 |
+| **API Usage Fee (read)** | $0.0005/req via x402 (11 tools) | $50-500 (early stage) |
+| **API Usage Fee (trade)** | $0.001 per trade order via x402 | $10-100 (early stage) |
+| **Builder Rewards** | Polymarket pays Builder rewards based on attributed volume. Revenue share with client. | Variable |
 
-**Total expected (year 1):** $100–1000/month from Polymarket integration alone.
+**Total expected (year 1):** $100-1000/month from Polymarket integration alone.
 
-**Scaling potential:** As agent adoption grows, prediction market data becomes high-value (agents making financial decisions, risk assessments, planning). Volume could 10-100x.
+**Scaling potential:** As agent adoption grows, prediction market data becomes high-value. Trading volume from autonomous agents could 10-100x.
 
 ---
 
@@ -756,30 +554,30 @@ AI Agent                    APIbase.pro                     Polymarket
 
 ### What works well about this integration
 
-1. **Builder Keys = natural referral model.** Polymarket already has a Builder program that attributes volume to apps. This maps perfectly to APIbase's referral architecture — no custom tracking needed.
+1. **Builder Keys = natural referral model.** Polymarket's Builder program attributes volume to apps. Maps perfectly to APIbase's referral architecture.
 
-2. **Mostly public API = low barrier.** ~80% of Polymarket endpoints don't require authentication. AIbase can provide massive value (search, prices, analytics) with just the client's Builder Keys. Trading adds value but isn't required for MVP.
+2. **`@polymarket/clob-client` SDK eliminates signing complexity.** 9 headers, 2 EIP-712 domains, custom HMAC — all handled by one `ClobClient` instance. Without the SDK this would be 500+ lines of signing code.
 
-3. **High agent demand.** Prediction market data is exactly what AI agents need for: answering probability questions, risk assessment, market sentiment analysis, financial planning.
+3. **Lazy singleton with L2 credential derivation.** L1 signing happens once at startup, L2 credentials are cached. All subsequent requests use fast HMAC signing.
 
-4. **Clean API architecture.** Polymarket has 4 well-documented services with OpenAPI-like structure. Makes wrapper generation straightforward for Claude Code MAX.
+4. **Clean separation of read-only and trading paths.** `call()` override routes trading tools through SDK, read-only tools use existing raw HTTP path. Zero regression risk for Phase 1.
+
+5. **High agent demand.** Prediction market data + trading is exactly what AI agents need: probability queries, risk assessment, autonomous trading strategies.
 
 ### Challenges identified
 
-1. **CLOB credentials gap.** For full trading API, need separate CLOB credentials beyond Builder Keys. This means the client must provide additional secrets. APIbase needs secure vault storage.
+1. **L2 credential derivation requires L1 signing at startup.** First trading request may be slow (~2s). Mitigated by lazy singleton with shared init promise.
 
-2. **Rate limit distribution.** Polymarket's limits are global per IP/key. When multiple agents share APIbase's access, need fair distribution. Solved by per-agent quotas based on KYA level.
+2. **Rate limit distribution.** Polymarket's limits are global per IP/key. Multiple agents share APIbase's access. Solved by per-agent quotas.
 
-3. **Price volatility of data.** Prediction market prices change rapidly. Cache TTL must be very short (1-2 sec for prices) to avoid serving stale probabilities that could lead to bad agent decisions.
+3. **Price volatility.** Prediction market prices change rapidly. Cache TTL kept very short for prices (5s) and zero for trading operations.
 
-4. **Blockchain dependency.** Polymarket runs on Polygon. If Polygon has issues (congestion, outage), trading endpoints fail. APIbase should detect and communicate this to agents gracefully.
+### Pattern: SDK-Based Trading Adapter
 
-### Pattern: Builder Key Integration
+This integration establishes a pattern for other platforms with complex signing:
+- Use official SDK when signing complexity is high (>3 header types)
+- Override `call()` to route between raw HTTP (read) and SDK (trade) paths
+- Lazy singleton for expensive credential derivation
+- Builder/referral config injected at SDK client creation
 
-This integration establishes a **reusable pattern** for other platforms with builder/affiliate programs:
-- Platform has a developer/builder program with API keys for attribution
-- Read-only access is free and unauthenticated
-- Write operations require additional credentials
-- Revenue sharing between APIbase and the client (Builder Key owner)
-
-This pattern likely applies to: Uniswap, 1inch, Jupiter, Aave, and other DeFi protocols with referral/builder programs.
+This pattern applies to: Hyperliquid, dYdX, Jupiter, and other DeFi protocols with complex signing requirements.

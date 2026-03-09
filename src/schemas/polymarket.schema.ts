@@ -34,7 +34,7 @@ const polymarketMarketDetail = z
 
 const polymarketPrices = z
   .object({
-    market_ids: z.array(z.string()).max(50),
+    token_id: z.string(),
   })
   .strip();
 
@@ -63,11 +63,42 @@ const polymarketTrending = z
   })
   .strip();
 
-const polymarketLeaderboard = z
+// Phase 2 — Trading tools (UC-001 §3-§8)
+
+const polymarketPlaceOrder = z
   .object({
-    sort_by: z.enum(['profit', 'volume', 'markets_traded']).optional(),
-    period: z.enum(['24h', '7d', '30d', 'all_time']).optional(),
+    token_id: z.string(),
+    price: z.number().min(0.01).max(0.99),
+    side: z.enum(['buy', 'sell']),
+    size: z.number().min(1),
+    order_type: z.enum(['GTC', 'GTD', 'FOK']).optional(),
+    tick_size: z.string().optional(),
+    neg_risk: z.boolean().optional(),
+  })
+  .strip();
+
+const polymarketCancelOrder = z
+  .object({
+    order_id: z.string(),
+  })
+  .strip();
+
+const polymarketOpenOrders = z
+  .object({
+    market_id: z.string().optional(),
+  })
+  .strip();
+
+const polymarketTradeHistory = z
+  .object({
+    market_id: z.string().optional(),
     limit: z.number().int().max(100).optional(),
+  })
+  .strip();
+
+const polymarketBalance = z
+  .object({
+    asset_type: z.enum(['COLLATERAL', 'CONDITIONAL']).optional(),
   })
   .strip();
 
@@ -78,5 +109,9 @@ export const polymarketSchemas: Record<string, ZodSchema> = {
   'polymarket.price_history': polymarketPriceHistory,
   'polymarket.get_orderbook': polymarketGetOrderbook,
   'polymarket.trending': polymarketTrending,
-  'polymarket.leaderboard': polymarketLeaderboard,
+  'polymarket.place_order': polymarketPlaceOrder,
+  'polymarket.cancel_order': polymarketCancelOrder,
+  'polymarket.open_orders': polymarketOpenOrders,
+  'polymarket.trade_history': polymarketTradeHistory,
+  'polymarket.balance': polymarketBalance,
 };

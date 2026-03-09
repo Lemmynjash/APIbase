@@ -40,7 +40,36 @@ export interface GammaMarket {
   spread?: number;
 }
 
-export type GammaSearchResponse = GammaMarket[];
+/** /public-search response — events with nested markets */
+export interface GammaEvent {
+  id: string;
+  ticker: string;
+  slug: string;
+  title: string;
+  description?: string;
+  startDate?: string;
+  creationDate?: string;
+  endDate?: string;
+  image?: string;
+  icon?: string;
+  active: boolean;
+  closed: boolean;
+  archived?: boolean;
+  liquidity?: number;
+  volume?: number;
+  volume24hr?: number;
+  enableOrderBook?: boolean;
+  markets: GammaMarket[];
+}
+
+export interface GammaSearchResponse {
+  events: GammaEvent[];
+  pagination?: {
+    count: number;
+    limit: number;
+    offset: number;
+  };
+}
 
 export type GammaMarketsResponse = GammaMarket[];
 
@@ -54,6 +83,11 @@ export interface ClobPriceEntry {
 }
 
 export type ClobPricesResponse = Record<string, string>;
+
+/** /midpoint response — single token midpoint price */
+export interface ClobMidpointResponse {
+  mid: string;
+}
 
 export interface ClobOrderbookLevel {
   price: string;
@@ -79,17 +113,5 @@ export type ClobPriceHistoryResponse = {
 };
 
 // ---------------------------------------------------------------------------
-// Data API — /leaderboard
+// Data API — leaderboard endpoint removed (2025+)
 // ---------------------------------------------------------------------------
-
-export interface DataLeaderboardEntry {
-  address: string;
-  profit: number;
-  volume: number;
-  marketsTraded: number;
-  rank: number;
-  displayName?: string;
-  profileImage?: string;
-}
-
-export type DataLeaderboardResponse = DataLeaderboardEntry[];

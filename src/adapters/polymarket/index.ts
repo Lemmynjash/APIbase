@@ -8,10 +8,11 @@ import type {
   GammaSearchResponse,
   GammaMarket,
   GammaMarketsResponse,
+  ClobMidpointResponse,
   ClobOrderbookResponse,
   ClobPriceHistoryResponse,
-  DataLeaderboardResponse,
 } from './types';
+import { isTradingTool, executeTradingCall } from './trading';
 
 // ---------------------------------------------------------------------------
 // Base URLs for Polymarket services
@@ -19,19 +20,18 @@ import type {
 
 const GAMMA_BASE = 'https://gamma-api.polymarket.com';
 const CLOB_BASE = 'https://clob.polymarket.com';
-const DATA_BASE = 'https://data-api.polymarket.com';
+// Data API leaderboard endpoint removed (2025+) — not used
 
 /**
  * Polymarket adapter (UC-001, §10.2 Level 1).
  *
  * Supported tools (Phase 1 — read-only):
- *   polymarket.search         → Gamma API /public-search
+ *   polymarket.search         → Gamma API /public-search (q param, returns {events})
  *   polymarket.market_detail  → Gamma API /markets/{id}
- *   polymarket.prices         → CLOB API  /prices
+ *   polymarket.prices         → CLOB API  /midpoint (single token_id)
  *   polymarket.get_orderbook  → CLOB API  /book
  *   polymarket.price_history  → CLOB API  /prices-history
  *   polymarket.trending       → Gamma API /markets (sorted)
- *   polymarket.leaderboard    → Data API  /leaderboard
  *
  * Auth: no auth required for read-only endpoints.
  */
@@ -41,6 +41,17 @@ export class PolymarketAdapter extends BaseAdapter {
       provider: 'polymarket',
       baseUrl: GAMMA_BASE,
     });
+  }
+
+  /**
+   * Override call() to route trading tools through the ClobClient SDK.
+   * Read-only tools continue using the base adapter's raw fetch().
+   */
+  async call(req: ProviderRequest): Promise<ProviderRawResponse> {
+    if (isTradingTool(req.toolId)) {
+      return executeTradingCall(req);
+    }
+    return super.call(req);
   }
 
   protected buildRequest(req: ProviderRequest): {
@@ -64,8 +75,6 @@ export class PolymarketAdapter extends BaseAdapter {
         return this.buildPriceHistoryRequest(params);
       case 'polymarket.trending':
         return this.buildTrendingRequest(params);
-      case 'polymarket.leaderboard':
-        return this.buildLeaderboardRequest(params);
       default:
         throw {
           code: ProviderErrorCode.INVALID_RESPONSE,
@@ -84,8 +93,8 @@ export class PolymarketAdapter extends BaseAdapter {
     switch (req.toolId) {
       case 'polymarket.search': {
         const data = body as GammaSearchResponse;
-        if (!Array.isArray(data)) {
-          throw new Error('Expected array from Gamma search');
+        if (!data.events || !Array.isArray(data.events)) {
+          throw new Error('Expected {events: [...]} from Gamma search');
         }
         return data;
       }
@@ -97,10 +106,11 @@ export class PolymarketAdapter extends BaseAdapter {
         return data;
       }
       case 'polymarket.prices': {
-        if (typeof body !== 'object' || body === null) {
-          throw new Error('Expected object from CLOB prices');
+        const data = body as ClobMidpointResponse;
+        if (typeof data.mid !== 'string') {
+          throw new Error('Expected {mid: "..."} from CLOB midpoint');
         }
-        return body;
+        return data;
       }
       case 'polymarket.get_orderbook': {
         const data = body as ClobOrderbookResponse;
@@ -123,13 +133,6 @@ export class PolymarketAdapter extends BaseAdapter {
         }
         return data;
       }
-      case 'polymarket.leaderboard': {
-        const data = body as DataLeaderboardResponse;
-        if (!Array.isArray(data)) {
-          throw new Error('Expected array from leaderboard');
-        }
-        return data;
-      }
       default:
         return body;
     }
@@ -145,7 +148,8 @@ export class PolymarketAdapter extends BaseAdapter {
     headers: Record<string, string>;
   } {
     const qs = new URLSearchParams();
-    qs.set('query', params.query as string);
+    // Gamma API uses 'q' parameter (not 'query')
+    qs.set('q', (params.query as string) || (params.q as string) || '');
     if (params.category) qs.set('category', params.category as string);
     if (params.status && params.status !== 'all')
       qs.set('active', params.status === 'active' ? 'true' : 'false');
@@ -178,14 +182,12 @@ export class PolymarketAdapter extends BaseAdapter {
     method: string;
     headers: Record<string, string>;
   } {
-    const marketIds = params.market_ids as string[];
-    const qs = new URLSearchParams();
-    for (const id of marketIds) {
-      qs.append('token_id', id);
-    }
+    // CLOB /prices endpoint removed — use /midpoint for single token price
+    const tokenId = (params.token_id as string) || (params.market_id as string);
+    const qs = new URLSearchParams({ token_id: tokenId });
 
     return {
-      url: `${CLOB_BASE}/prices?${qs.toString()}`,
+      url: `${CLOB_BASE}/midpoint?${qs.toString()}`,
       method: 'GET',
       headers: {},
     };
@@ -249,27 +251,6 @@ export class PolymarketAdapter extends BaseAdapter {
     };
   }
 
-  private buildLeaderboardRequest(params: Record<string, unknown>): {
-    url: string;
-    method: string;
-    headers: Record<string, string>;
-  } {
-    const sortBy = (params.sort_by as string) || 'profit';
-    const period = (params.period as string) || '7d';
-    const limit = params.limit ?? 20;
-
-    const qs = new URLSearchParams({
-      sort_by: sortBy,
-      period,
-      limit: String(limit),
-    });
-
-    return {
-      url: `${DATA_BASE}/leaderboard?${qs.toString()}`,
-      method: 'GET',
-      headers: {},
-    };
-  }
 }
 
 // ---------------------------------------------------------------------------

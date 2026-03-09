@@ -4,9 +4,9 @@ import type {
   GammaMarket,
   GammaSearchResponse,
   GammaMarketsResponse,
+  ClobMidpointResponse,
   ClobOrderbookResponse,
   ClobPriceHistoryResponse,
-  DataLeaderboardResponse,
 } from '../adapters/polymarket/types';
 
 /**
@@ -26,15 +26,13 @@ export class PolymarketNormalizer extends BaseNormalizer {
       case 'polymarket.market_detail':
         return this.normalizeMarketDetail(raw.body as GammaMarket);
       case 'polymarket.prices':
-        return this.normalizePrices(raw.body as Record<string, string>);
+        return this.normalizePrices(raw.body as ClobMidpointResponse);
       case 'polymarket.get_orderbook':
         return this.normalizeOrderbook(raw.body as ClobOrderbookResponse);
       case 'polymarket.price_history':
         return this.normalizePriceHistory(raw.body as ClobPriceHistoryResponse);
       case 'polymarket.trending':
         return this.normalizeTrending(raw.body as GammaMarketsResponse);
-      case 'polymarket.leaderboard':
-        return this.normalizeLeaderboard(raw.body as DataLeaderboardResponse);
       default:
         throw new Error(`Unsupported tool: ${toolId}`);
     }
@@ -44,10 +42,17 @@ export class PolymarketNormalizer extends BaseNormalizer {
   // polymarket.search / polymarket.trending
   // ---------------------------------------------------------------------------
 
-  private normalizeSearch(markets: GammaSearchResponse): ProviderNormalizedResponse {
+  private normalizeSearch(response: GammaSearchResponse): ProviderNormalizedResponse {
+    // Flatten events → markets for consistent output
+    const allMarkets: GammaMarket[] = [];
+    for (const event of response.events) {
+      for (const market of event.markets) {
+        allMarkets.push(market);
+      }
+    }
     return {
-      data: markets.map((m) => normalizeMarket(m)),
-      metadata: { provider: 'polymarket', count: markets.length },
+      data: allMarkets.map((m) => normalizeMarket(m)),
+      metadata: { provider: 'polymarket', count: allMarkets.length, events: response.events.length },
     };
   }
 
@@ -73,16 +78,14 @@ export class PolymarketNormalizer extends BaseNormalizer {
   // polymarket.prices
   // ---------------------------------------------------------------------------
 
-  private normalizePrices(prices: Record<string, string>): ProviderNormalizedResponse {
-    const entries = Object.entries(prices).map(([tokenId, price]) => ({
-      market_id: tokenId,
-      price: parseFloat(price),
-      probability: parseFloat(price),
-    }));
-
+  private normalizePrices(midpoint: ClobMidpointResponse): ProviderNormalizedResponse {
+    const price = parseFloat(midpoint.mid);
     return {
-      data: entries,
-      metadata: { provider: 'polymarket', count: entries.length },
+      data: {
+        midpoint: price,
+        probability: price,
+      },
+      metadata: { provider: 'polymarket' },
     };
   }
 
@@ -131,24 +134,6 @@ export class PolymarketNormalizer extends BaseNormalizer {
     };
   }
 
-  // ---------------------------------------------------------------------------
-  // polymarket.leaderboard
-  // ---------------------------------------------------------------------------
-
-  private normalizeLeaderboard(entries: DataLeaderboardResponse): ProviderNormalizedResponse {
-    const normalized = entries.map((entry) => ({
-      rank: entry.rank,
-      address: entry.address,
-      profit_usd: entry.profit,
-      volume_usd: entry.volume,
-      markets_traded: entry.marketsTraded,
-    }));
-
-    return {
-      data: { entries: normalized },
-      metadata: { provider: 'polymarket', count: normalized.length },
-    };
-  }
 }
 
 // ---------------------------------------------------------------------------
