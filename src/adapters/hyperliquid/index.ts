@@ -5,8 +5,6 @@ import {
   ProviderErrorCode,
 } from '../../types/provider';
 import type {
-  HyperliquidMetaResponse,
-  HyperliquidAllMidsResponse,
   HyperliquidL2BookResponse,
   HyperliquidCandleResponse,
   HyperliquidClearinghouseState,
