@@ -2876,6 +2876,23 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # --- UC-360: Wger Workout (Exercise + Nutrition) ---
+  - tool_id: wger.exercise_search
+    name: Exercise Search
+    provider: wger
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: wger.exercise_details
+    name: Exercise Details
+    provider: wger
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: wger.ingredients
+    name: Food Ingredient Nutrition
+    provider: wger
+    price_usd: "0.001"
+    cache_ttl: 3600
+
   - tool_id: platform.call_batch
     name: Batch Tool Calls
     provider: platform

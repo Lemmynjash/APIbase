@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 486 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 489 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16546,6 +16546,83 @@
           "date",
           "latitude",
           "longitude"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "wger.fitness.exercise_details",
+      "title": "Exercise Details",
+      "description": "Get full exercise details by ID \u2014 description, primary and secondary muscles worked, required equipment (barbell/dumbbell/bodyweight/machine), and category. Use with exercise_search to build workout plans.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Exercise base ID from search results (e.g. 615 for Squats)"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "wger.fitness.exercise_search",
+      "title": "Exercise Search",
+      "description": "Search 896 exercises by name \u2014 bench press, squat, deadlift, curl, etc. Returns exercise name, category (Chest/Back/Legs/Arms/Abs/Shoulders/Cardio), and ID for details lookup. Open-source fitness database (Wger, CC-BY-SA).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string",
+            "description": "Exercise name to search (e.g. \"bench press\", \"squat\", \"deadlift\", \"bicep curl\")",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "term"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "wger.fitness.ingredients",
+      "title": "Food Ingredient Nutrition",
+      "description": "Search 1.28M food ingredients by name \u2014 chicken breast, rice, banana, oats. Returns calories (kcal), protein, carbs, fat, fiber, sugar, sodium per 100g. Complements USDA FDC with broader international coverage.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Food ingredient name (e.g. \"chicken breast\", \"rice\", \"banana\", \"oats\")",
+            "minLength": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Number of results (1-20, default 10)"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "annotations": {

@@ -145,6 +145,7 @@ import { ClimateAdapter } from './climate';
 import { QuickchartAdapter } from './quickchart';
 import { FigiAdapter } from './figi';
 import { UsnoAdapter } from './usno';
+import { WgerAdapter } from './wger';
 import { config } from '../config';
 
 /**
@@ -927,6 +928,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'usno':
       // USNO Astronomical — moon phases, sun/moon, seasons, no auth (UC-353)
       return getOrCreate('usno', () => new UsnoAdapter());
+    case 'wger':
+      // Wger — exercise + nutrition database, no auth, CC-BY-SA (UC-360)
+      return getOrCreate('wger', () => new WgerAdapter());
     default:
       return undefined;
   }

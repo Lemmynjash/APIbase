@@ -4914,4 +4914,35 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'space',
     annotations: READ_ONLY,
   },
+
+  // ---------------------------------------------------------------------------
+  // Wger — Exercise & Nutrition Database (UC-360, 3 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'wger.exercise_search',
+    mcpName: 'wger.fitness.exercise_search',
+    title: 'Exercise Search',
+    description:
+      'Search 896 exercises by name — bench press, squat, deadlift, curl, etc. Returns exercise name, category (Chest/Back/Legs/Arms/Abs/Shoulders/Cardio), and ID for details lookup. Open-source fitness database (Wger, CC-BY-SA).',
+    category: 'health',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'wger.exercise_details',
+    mcpName: 'wger.fitness.exercise_details',
+    title: 'Exercise Details',
+    description:
+      'Get full exercise details by ID — description, primary and secondary muscles worked, required equipment (barbell/dumbbell/bodyweight/machine), and category. Use with exercise_search to build workout plans.',
+    category: 'health',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'wger.ingredients',
+    mcpName: 'wger.fitness.ingredients',
+    title: 'Food Ingredient Nutrition',
+    description:
+      'Search 1.28M food ingredients by name — chicken breast, rice, banana, oats. Returns calories (kcal), protein, carbs, fat, fiber, sugar, sodium per 100g. Complements USDA FDC with broader international coverage.',
+    category: 'health',
+    annotations: READ_ONLY,
+  },
 ];
