@@ -206,6 +206,15 @@
     "docs_url": "https://www.ncei.noaa.gov/cdo-web/webservices/v2",
     "limit_proof": "Free API key, 1,000 req/day. US Gov public domain. 100K+ global stations, 260+ years."
   },
+  "figi": {
+    "display_name": "OpenFIGI",
+    "health_url": "https://api.openfigi.com/v3/search",
+    "limit_type": "daily",
+    "free_limit": 25000,
+    "reset_period": "daily",
+    "docs_url": "https://www.openfigi.com/api",
+    "limit_proof": "Bloomberg open standard (ISO 18774). 25K/day free, higher with key. 300M+ instruments."
+  },
   "chart": {
     "display_name": "QuickChart",
     "health_url": "https://quickchart.io/health",

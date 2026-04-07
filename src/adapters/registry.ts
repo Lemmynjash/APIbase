@@ -143,6 +143,7 @@ import { EpaAdapter } from './epa';
 import { NceiAdapter } from './ncei';
 import { ClimateAdapter } from './climate';
 import { QuickchartAdapter } from './quickchart';
+import { FigiAdapter } from './figi';
 import { config } from '../config';
 
 /**
@@ -916,6 +917,12 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'chart':
       // QuickChart — chart image generation, no auth, MIT
       return getOrCreate('chart', () => new QuickchartAdapter());
+    case 'figi': {
+      const figiKey = (config as Record<string, unknown>).PROVIDER_KEY_OPENFIGI as
+        | string
+        | undefined;
+      return getOrCreate('figi', () => new FigiAdapter(figiKey ?? ''));
+    }
     default:
       return undefined;
   }

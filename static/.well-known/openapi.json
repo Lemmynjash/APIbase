@@ -42690,6 +42690,273 @@
           }
         ]
       }
+    },
+    "/api/v1/tools/figi.map/call": {
+      "post": {
+        "operationId": "figi_map",
+        "summary": "Map Financial Identifier to FIGI",
+        "description": "Resolve financial instrument identifiers — ISIN, CUSIP, SEDOL, or ticker symbol to Bloomberg FIGI (ISO 18774). Returns FIGI, composite FIGI, security name, type, and exchange. 300M+ instruments across 45K+ exchanges. Use ID_ISIN, ID_CUSIP, ID_SEDOL, or TICKER as id_type.",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "figi.map"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_type": {
+                    "type": "string",
+                    "enum": [
+                      "ID_ISIN",
+                      "ID_CUSIP",
+                      "ID_SEDOL",
+                      "ID_BB_GLOBAL",
+                      "TICKER",
+                      "ID_WERTPAPIER",
+                      "ID_COMMON"
+                    ],
+                    "description": "Identifier type: ID_ISIN, ID_CUSIP, ID_SEDOL, TICKER, ID_BB_GLOBAL"
+                  },
+                  "id_value": {
+                    "type": "string",
+                    "description": "Identifier value (e.g. US0378331005 for ISIN, AAPL for ticker, BBG000B9XRY4 for FIGI)",
+                    "minLength": 1
+                  },
+                  "exchange_code": {
+                    "type": "string",
+                    "description": "Exchange code to narrow results (e.g. US, LN, JP). Optional."
+                  }
+                },
+                "required": [
+                  "id_type",
+                  "id_value"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/figi.search/call": {
+      "post": {
+        "operationId": "figi_search",
+        "summary": "Search Financial Instruments",
+        "description": "Search 300M+ financial instruments by company name or ticker keyword. Filter by exchange and security type. Returns Bloomberg FIGI, ticker, name, market sector. Covers equities, ETPs, bonds, derivatives globally.",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "figi.search"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query — company name or ticker (e.g. \"Tesla\", \"Apple Inc\", \"MSFT\")",
+                    "minLength": 1
+                  },
+                  "exchange_code": {
+                    "type": "string",
+                    "description": "Filter by exchange code (e.g. US, LN, JP)"
+                  },
+                  "security_type": {
+                    "type": "string",
+                    "description": "Filter by security type (e.g. \"Common Stock\", \"ETP\", \"REIT\")"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/figi.filter/call": {
+      "post": {
+        "operationId": "figi_filter",
+        "summary": "Filter Financial Instruments",
+        "description": "Filter financial instruments by exchange code, market sector (Equity/Corp/Govt/Index/Curncy/Comdty), or security type (Common Stock/ETP/REIT/ADR). Browse instrument universe by structured criteria. Bloomberg OpenFIGI.",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "figi.filter"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "exchange_code": {
+                    "type": "string",
+                    "description": "Exchange code (e.g. US, LN, HK, JP)"
+                  },
+                  "market_sector": {
+                    "type": "string",
+                    "description": "Market sector (e.g. Equity, Corp, Govt, Index, Curncy, Comdty)"
+                  },
+                  "security_type": {
+                    "type": "string",
+                    "description": "Security type (e.g. \"Common Stock\", \"ETP\", \"REIT\", \"ADR\")"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
     }
   },
   "externalDocs": {

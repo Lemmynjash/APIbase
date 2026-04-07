@@ -4834,4 +4834,35 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
       openWorldHint: true,
     },
   },
+
+  // ---------------------------------------------------------------------------
+  // OpenFIGI — Bloomberg Financial Identifiers (UC-357, 3 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'figi.map',
+    mcpName: 'figi.finance.map',
+    title: 'Map Financial Identifier to FIGI',
+    description:
+      'Resolve financial instrument identifiers — ISIN, CUSIP, SEDOL, or ticker symbol to Bloomberg FIGI (ISO 18774). Returns FIGI, composite FIGI, security name, type, and exchange. 300M+ instruments across 45K+ exchanges. Use ID_ISIN, ID_CUSIP, ID_SEDOL, or TICKER as id_type.',
+    category: 'finance',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'figi.search',
+    mcpName: 'figi.finance.search',
+    title: 'Search Financial Instruments',
+    description:
+      'Search 300M+ financial instruments by company name or ticker keyword. Filter by exchange and security type. Returns Bloomberg FIGI, ticker, name, market sector. Covers equities, ETPs, bonds, derivatives globally.',
+    category: 'finance',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'figi.filter',
+    mcpName: 'figi.finance.filter',
+    title: 'Filter Financial Instruments',
+    description:
+      'Filter financial instruments by exchange code, market sector (Equity/Corp/Govt/Index/Curncy/Comdty), or security type (Common Stock/ETP/REIT/ADR). Browse instrument universe by structured criteria. Bloomberg OpenFIGI.',
+    category: 'finance',
+    annotations: READ_ONLY,
+  },
 ];

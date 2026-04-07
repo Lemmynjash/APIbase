@@ -2832,6 +2832,23 @@ tools:
     price_usd: "0.002"
     cache_ttl: 86400
 
+  # --- UC-357: OpenFIGI (Bloomberg Financial Identifiers) ---
+  - tool_id: figi.map
+    name: Map Financial Identifier to FIGI
+    provider: figi
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: figi.search
+    name: Search Financial Instruments
+    provider: figi
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: figi.filter
+    name: Filter Financial Instruments
+    provider: figi
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   - tool_id: platform.call_batch
     name: Batch Tool Calls
     provider: platform

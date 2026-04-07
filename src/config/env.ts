@@ -326,6 +326,9 @@ export const appEnvSchema = z.object({
   // NOAA NCEI (UC-343) — historical climate data, 1K/day
   PROVIDER_KEY_NOAA_NCEI: z.string().optional().default(''),
 
+  // OpenFIGI (UC-357) — Bloomberg financial identifier resolution, 25K/day free
+  PROVIDER_KEY_OPENFIGI: z.string().optional().default(''),
+
   // Predictive Pre-fetching (F8) — fire-and-forget cache warming
   PREFETCH_ENABLED: z.string().optional().default('false'),
 

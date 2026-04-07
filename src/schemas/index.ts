@@ -143,6 +143,7 @@ import { epaSchemas } from './epa.schema';
 import { nceiSchemas } from './ncei.schema';
 import { climateSchemas } from './climate.schema';
 import { quickchartSchemas } from './quickchart.schema';
+import { figiSchemas } from './figi.schema';
 
 export const toolSchemas: Record<string, ZodSchema> = {
   ...weatherSchemas,
@@ -289,4 +290,5 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...nceiSchemas,
   ...climateSchemas,
   ...quickchartSchemas,
+  ...figiSchemas,
 };

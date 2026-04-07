@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 478 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 481 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16291,6 +16291,108 @@
           "type",
           "labels",
           "datasets"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "figi.finance.filter",
+      "title": "Filter Financial Instruments",
+      "description": "Filter financial instruments by exchange code, market sector (Equity/Corp/Govt/Index/Curncy/Comdty), or security type (Common Stock/ETP/REIT/ADR). Browse instrument universe by structured criteria. Bloomberg OpenFIGI.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "exchange_code": {
+            "type": "string",
+            "description": "Exchange code (e.g. US, LN, HK, JP)"
+          },
+          "market_sector": {
+            "type": "string",
+            "description": "Market sector (e.g. Equity, Corp, Govt, Index, Curncy, Comdty)"
+          },
+          "security_type": {
+            "type": "string",
+            "description": "Security type (e.g. \"Common Stock\", \"ETP\", \"REIT\", \"ADR\")"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "figi.finance.map",
+      "title": "Map Financial Identifier to FIGI",
+      "description": "Resolve financial instrument identifiers \u2014 ISIN, CUSIP, SEDOL, or ticker symbol to Bloomberg FIGI (ISO 18774). Returns FIGI, composite FIGI, security name, type, and exchange. 300M+ instruments across 45K+ exchanges. Use ID_ISIN, ID_CUSIP, ID_SEDOL, or TICKER as id_type.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id_type": {
+            "type": "string",
+            "enum": [
+              "ID_ISIN",
+              "ID_CUSIP",
+              "ID_SEDOL",
+              "ID_BB_GLOBAL",
+              "TICKER",
+              "ID_WERTPAPIER",
+              "ID_COMMON"
+            ],
+            "description": "Identifier type: ID_ISIN, ID_CUSIP, ID_SEDOL, TICKER, ID_BB_GLOBAL"
+          },
+          "id_value": {
+            "type": "string",
+            "description": "Identifier value (e.g. US0378331005 for ISIN, AAPL for ticker, BBG000B9XRY4 for FIGI)",
+            "minLength": 1
+          },
+          "exchange_code": {
+            "type": "string",
+            "description": "Exchange code to narrow results (e.g. US, LN, JP). Optional."
+          }
+        },
+        "required": [
+          "id_type",
+          "id_value"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "figi.finance.search",
+      "title": "Search Financial Instruments",
+      "description": "Search 300M+ financial instruments by company name or ticker keyword. Filter by exchange and security type. Returns Bloomberg FIGI, ticker, name, market sector. Covers equities, ETPs, bonds, derivatives globally.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query \u2014 company name or ticker (e.g. \"Tesla\", \"Apple Inc\", \"MSFT\")",
+            "minLength": 1
+          },
+          "exchange_code": {
+            "type": "string",
+            "description": "Filter by exchange code (e.g. US, LN, JP)"
+          },
+          "security_type": {
+            "type": "string",
+            "description": "Filter by security type (e.g. \"Common Stock\", \"ETP\", \"REIT\")"
+          }
+        },
+        "required": [
+          "query"
         ]
       },
       "annotations": {
