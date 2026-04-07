@@ -140,6 +140,7 @@ import { gbifSchemas } from './gbif.schema';
 import { congressSchemas } from './congress.schema';
 import { depsdevSchemas } from './depsdev.schema';
 import { epaSchemas } from './epa.schema';
+import { nceiSchemas } from './ncei.schema';
 
 export const toolSchemas: Record<string, ZodSchema> = {
   ...weatherSchemas,
@@ -283,4 +284,5 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...congressSchemas,
   ...depsdevSchemas,
   ...epaSchemas,
+  ...nceiSchemas,
 };

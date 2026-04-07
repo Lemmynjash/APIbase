@@ -140,6 +140,7 @@ import { GbifAdapter } from './gbif';
 import { CongressAdapter } from './congress';
 import { DepsdevAdapter } from './depsdev';
 import { EpaAdapter } from './epa';
+import { NceiAdapter } from './ncei';
 import { config } from '../config';
 
 /**
@@ -900,6 +901,13 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'epa':
       // EPA Envirofacts — environmental data, no auth (UC-337)
       return getOrCreate('epa', () => new EpaAdapter());
+    case 'ncei': {
+      const nceiToken = (config as Record<string, unknown>).PROVIDER_KEY_NOAA_NCEI as
+        | string
+        | undefined;
+      if (!nceiToken) return undefined;
+      return getOrCreate('ncei', () => new NceiAdapter(nceiToken));
+    }
     default:
       return undefined;
   }

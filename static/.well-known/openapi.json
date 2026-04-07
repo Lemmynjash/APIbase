@@ -41990,6 +41990,184 @@
           }
         ]
       }
+    },
+    "/api/v1/tools/ncei.stations/call": {
+      "post": {
+        "operationId": "ncei_stations",
+        "summary": "NCEI Weather Stations",
+        "description": "Search 100K+ global weather stations from NOAA NCEI by location (state FIPS, ZIP, country). Returns station ID, name, coordinates, elevation, and data coverage dates (some from 1700s). Use station IDs with ncei.daily_data for historical climate records.",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.002000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ncei.stations"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location_id": {
+                    "type": "string",
+                    "description": "Location ID: FIPS:06 (California), FIPS:36 (New York), ZIP:10001, CITY:US360019, or CNTRY:US",
+                    "minLength": 1
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 25,
+                    "description": "Number of stations to return (1-25, default 10)"
+                  }
+                },
+                "required": [
+                  "location_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/ncei.daily_data/call": {
+      "post": {
+        "operationId": "ncei_daily_data",
+        "summary": "NCEI Daily Climate Data",
+        "description": "Retrieve historical daily weather observations from NOAA NCEI — max/min temperature, precipitation, snowfall, wind speed. 260+ years of records from global stations. Values in tenths of °C (temp) and tenths of mm (precip). Source: GHCND dataset.",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.002000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ncei.daily_data"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "station_id": {
+                    "type": "string",
+                    "description": "NCEI station ID (e.g. GHCND:USW00094728 for Central Park, NY). Get from ncei.stations tool.",
+                    "minLength": 1
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format (e.g. 2025-01-01)"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format (e.g. 2025-01-31). Max 1 year range."
+                  },
+                  "datatypes": {
+                    "type": "string",
+                    "description": "Comma-separated data types: TMAX (max temp), TMIN (min temp), PRCP (precipitation), SNOW, AWND (avg wind). Default: all."
+                  }
+                },
+                "required": [
+                  "station_id",
+                  "start_date",
+                  "end_date"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
     }
   },
   "externalDocs": {

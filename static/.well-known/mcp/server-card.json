@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 470 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 472 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16031,6 +16031,74 @@
         },
         "required": [
           "state"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "ncei.climate.daily_data",
+      "title": "NCEI Daily Climate Data",
+      "description": "Retrieve historical daily weather observations from NOAA NCEI \u2014 max/min temperature, precipitation, snowfall, wind speed. 260+ years of records from global stations. Values in tenths of \u00b0C (temp) and tenths of mm (precip). Source: GHCND dataset.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "station_id": {
+            "type": "string",
+            "description": "NCEI station ID (e.g. GHCND:USW00094728 for Central Park, NY). Get from ncei.stations tool.",
+            "minLength": 1
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Start date in YYYY-MM-DD format (e.g. 2025-01-01)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "End date in YYYY-MM-DD format (e.g. 2025-01-31). Max 1 year range."
+          },
+          "datatypes": {
+            "type": "string",
+            "description": "Comma-separated data types: TMAX (max temp), TMIN (min temp), PRCP (precipitation), SNOW, AWND (avg wind). Default: all."
+          }
+        },
+        "required": [
+          "station_id",
+          "start_date",
+          "end_date"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "ncei.climate.stations",
+      "title": "NCEI Weather Stations",
+      "description": "Search 100K+ global weather stations from NOAA NCEI by location (state FIPS, ZIP, country). Returns station ID, name, coordinates, elevation, and data coverage dates (some from 1700s). Use station IDs with ncei.daily_data for historical climate records.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "location_id": {
+            "type": "string",
+            "description": "Location ID: FIPS:06 (California), FIPS:36 (New York), ZIP:10001, CITY:US360019, or CNTRY:US",
+            "minLength": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25,
+            "description": "Number of stations to return (1-25, default 10)"
+          }
+        },
+        "required": [
+          "location_id"
         ]
       },
       "annotations": {

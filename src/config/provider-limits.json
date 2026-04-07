@@ -197,6 +197,15 @@
     "docs_url": "https://www.epa.gov/enviro/envirofacts-data-service-api",
     "limit_proof": "US Government open data. No auth, no rate limits. 600K+ regulated facilities."
   },
+  "ncei": {
+    "display_name": "NOAA NCEI",
+    "health_url": "https://www.ncei.noaa.gov/cdo-web/api/v2/datasets",
+    "limit_type": "daily",
+    "free_limit": 1000,
+    "reset_period": "daily",
+    "docs_url": "https://www.ncei.noaa.gov/cdo-web/webservices/v2",
+    "limit_proof": "Free API key, 1,000 req/day. US Gov public domain. 100K+ global stations, 260+ years."
+  },
   "depsdev": {
     "display_name": "deps.dev",
     "health_url": "https://api.deps.dev/v3alpha/systems/npm/packages/express",

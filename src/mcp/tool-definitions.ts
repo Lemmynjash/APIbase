@@ -4745,4 +4745,26 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'world',
     annotations: READ_ONLY,
   },
+
+  // ---------------------------------------------------------------------------
+  // NOAA NCEI — Historical Climate Data (UC-343, 2 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'ncei.stations',
+    mcpName: 'ncei.climate.stations',
+    title: 'NCEI Weather Stations',
+    description:
+      'Search 100K+ global weather stations from NOAA NCEI by location (state FIPS, ZIP, country). Returns station ID, name, coordinates, elevation, and data coverage dates (some from 1700s). Use station IDs with ncei.daily_data for historical climate records.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'ncei.daily_data',
+    mcpName: 'ncei.climate.daily_data',
+    title: 'NCEI Daily Climate Data',
+    description:
+      'Retrieve historical daily weather observations from NOAA NCEI — max/min temperature, precipitation, snowfall, wind speed. 260+ years of records from global stations. Values in tenths of °C (temp) and tenths of mm (precip). Source: GHCND dataset.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
 ];

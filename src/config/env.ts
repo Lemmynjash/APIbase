@@ -323,6 +323,9 @@ export const appEnvSchema = z.object({
   // Congress.gov (UC-336) — US legislation, members, 5K/hr
   PROVIDER_KEY_CONGRESS: z.string().optional().default(''),
 
+  // NOAA NCEI (UC-343) — historical climate data, 1K/day
+  PROVIDER_KEY_NOAA_NCEI: z.string().optional().default(''),
+
   // Predictive Pre-fetching (F8) — fire-and-forget cache warming
   PREFETCH_ENABLED: z.string().optional().default('false'),
 
