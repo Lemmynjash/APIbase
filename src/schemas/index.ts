@@ -139,6 +139,7 @@ import { pypiSchemas } from './pypi.schema';
 import { gbifSchemas } from './gbif.schema';
 import { congressSchemas } from './congress.schema';
 import { depsdevSchemas } from './depsdev.schema';
+import { epaSchemas } from './epa.schema';
 
 export const toolSchemas: Record<string, ZodSchema> = {
   ...weatherSchemas,
@@ -281,4 +282,5 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...gbifSchemas,
   ...congressSchemas,
   ...depsdevSchemas,
+  ...epaSchemas,
 };

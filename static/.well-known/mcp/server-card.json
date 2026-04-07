@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 468 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 470 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -15965,6 +15965,72 @@
         "required": [
           "system",
           "package"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "epa.environment.toxic_releases",
+      "title": "EPA Toxic Release Inventory",
+      "description": "Search EPA Toxic Release Inventory (TRI) facilities by US state or ZIP code. Returns facility name, address, county, industry sector, and closed status. 600K+ regulated facilities. Source: EPA Envirofacts (US Gov open data).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "US state code (e.g. CA, TX, NY, FL)",
+            "minLength": 2,
+            "maxLength": 2
+          },
+          "zip_code": {
+            "type": "string",
+            "description": "ZIP code to filter (e.g. 90001). Overrides state filter if provided."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of results (1-50, default 10)"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "epa.environment.water_systems",
+      "title": "EPA Public Water Systems",
+      "description": "Search public water systems by US state. Returns system name, PWSID, activity status, primacy agency, EPA region, population served, and service connections. Source: EPA Safe Drinking Water Act data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "US state code (e.g. FL, CA, TX)",
+            "minLength": 2,
+            "maxLength": 2
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of results (1-50, default 10)"
+          }
+        },
+        "required": [
+          "state"
         ]
       },
       "annotations": {

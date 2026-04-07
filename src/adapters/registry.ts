@@ -139,6 +139,7 @@ import { PypiAdapter } from './pypi';
 import { GbifAdapter } from './gbif';
 import { CongressAdapter } from './congress';
 import { DepsdevAdapter } from './depsdev';
+import { EpaAdapter } from './epa';
 import { config } from '../config';
 
 /**
@@ -896,6 +897,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'depsdev':
       // deps.dev — Google Open Source Insights, no auth, Apache 2.0 (UC-347)
       return getOrCreate('depsdev', () => new DepsdevAdapter());
+    case 'epa':
+      // EPA Envirofacts — environmental data, no auth (UC-337)
+      return getOrCreate('epa', () => new EpaAdapter());
     default:
       return undefined;
   }

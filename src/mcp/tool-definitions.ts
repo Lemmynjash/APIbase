@@ -4723,4 +4723,26 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'developer',
     annotations: READ_ONLY,
   },
+
+  // ---------------------------------------------------------------------------
+  // EPA Envirofacts — Environmental Data (UC-337, 2 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'epa.toxic_releases',
+    mcpName: 'epa.environment.toxic_releases',
+    title: 'EPA Toxic Release Inventory',
+    description:
+      'Search EPA Toxic Release Inventory (TRI) facilities by US state or ZIP code. Returns facility name, address, county, industry sector, and closed status. 600K+ regulated facilities. Source: EPA Envirofacts (US Gov open data).',
+    category: 'world',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'epa.water_systems',
+    mcpName: 'epa.environment.water_systems',
+    title: 'EPA Public Water Systems',
+    description:
+      'Search public water systems by US state. Returns system name, PWSID, activity status, primacy agency, EPA region, population served, and service connections. Source: EPA Safe Drinking Water Act data.',
+    category: 'world',
+    annotations: READ_ONLY,
+  },
 ];

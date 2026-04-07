@@ -188,6 +188,15 @@
     "docs_url": "https://whoisjson.com/",
     "limit_proof": "Basic plan: 1,000 req/month free, 20 req/min, all endpoints included, expires May 2026"
   },
+  "epa": {
+    "display_name": "EPA Envirofacts",
+    "health_url": "https://enviro.epa.gov/enviro/efservice/tri_facility/state_abbr/CA/rows/0:1/JSON",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://www.epa.gov/enviro/envirofacts-data-service-api",
+    "limit_proof": "US Government open data. No auth, no rate limits. 600K+ regulated facilities."
+  },
   "depsdev": {
     "display_name": "deps.dev",
     "health_url": "https://api.deps.dev/v3alpha/systems/npm/packages/express",

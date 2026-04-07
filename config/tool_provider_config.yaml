@@ -2773,6 +2773,18 @@ tools:
     price_usd: "0.001"
     cache_ttl: 3600
 
+  # --- UC-337: EPA Envirofacts (Environmental Data) ---
+  - tool_id: epa.toxic_releases
+    name: EPA Toxic Release Inventory
+    provider: epa
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: epa.water_systems
+    name: EPA Public Water Systems
+    provider: epa
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   # --- F1: Batch API (wrapper $0, sub-calls billed individually) ---
   - tool_id: platform.call_batch
     name: Batch Tool Calls
