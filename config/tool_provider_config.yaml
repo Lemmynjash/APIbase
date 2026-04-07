@@ -2798,6 +2798,33 @@ tools:
     price_usd: "0.002"
     cache_ttl: 86400
 
+  # --- UC-342: Global Warming API (Climate Indicators) ---
+  - tool_id: climate.temperature
+    name: Global Temperature Anomaly
+    provider: climate
+    price_usd: "0.003"
+    cache_ttl: 86400
+  - tool_id: climate.co2
+    name: Atmospheric CO2 (Keeling Curve)
+    provider: climate
+    price_usd: "0.003"
+    cache_ttl: 86400
+  - tool_id: climate.methane
+    name: Atmospheric Methane
+    provider: climate
+    price_usd: "0.003"
+    cache_ttl: 86400
+  - tool_id: climate.nitrous_oxide
+    name: Atmospheric Nitrous Oxide
+    provider: climate
+    price_usd: "0.003"
+    cache_ttl: 86400
+  - tool_id: climate.arctic_ice
+    name: Arctic Sea Ice Extent
+    provider: climate
+    price_usd: "0.003"
+    cache_ttl: 86400
+
   - tool_id: platform.call_batch
     name: Batch Tool Calls
     provider: platform

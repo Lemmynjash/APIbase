@@ -4767,4 +4767,53 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'weather',
     annotations: READ_ONLY,
   },
+
+  // ---------------------------------------------------------------------------
+  // Global Warming API — Climate Indicators (UC-342, 5 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'climate.temperature',
+    mcpName: 'climate.indicators.temperature',
+    title: 'Global Temperature Anomaly',
+    description:
+      'Global surface temperature anomaly from NASA GISS — monthly readings since 1880. Values in °C vs 1951-1980 baseline. Returns last 10 years by default (adjustable 1-50). Source: NASA Goddard Institute for Space Studies.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'climate.co2',
+    mcpName: 'climate.indicators.co2',
+    title: 'Atmospheric CO2 (Keeling Curve)',
+    description:
+      'Atmospheric CO2 concentration from NOAA Mauna Loa Observatory — the Keeling Curve. Monthly readings in ppm (parts per million) since 1958. Returns last 10 years by default. Source: NOAA ESRL.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'climate.methane',
+    mcpName: 'climate.indicators.methane',
+    title: 'Atmospheric Methane (CH4)',
+    description:
+      'Atmospheric methane concentration from NOAA ESRL — monthly readings in ppb (parts per billion) since 1983. Methane is the second most important greenhouse gas after CO2. Returns last 10 years by default.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'climate.nitrous_oxide',
+    mcpName: 'climate.indicators.nitrous_oxide',
+    title: 'Atmospheric Nitrous Oxide (N2O)',
+    description:
+      'Atmospheric nitrous oxide concentration from NOAA ESRL — monthly readings in ppb since 2001. N2O is a potent greenhouse gas with 273x the warming potential of CO2. Returns last 10 years by default.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'climate.arctic_ice',
+    mcpName: 'climate.indicators.arctic_ice',
+    title: 'Arctic Sea Ice Extent',
+    description:
+      'Arctic sea ice extent from NSIDC — monthly measurements in million km² since 1979. Tracks long-term decline in Arctic ice coverage. Returns last 10 years by default. Source: National Snow and Ice Data Center.',
+    category: 'weather',
+    annotations: READ_ONLY,
+  },
 ];

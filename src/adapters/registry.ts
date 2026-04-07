@@ -141,6 +141,7 @@ import { CongressAdapter } from './congress';
 import { DepsdevAdapter } from './depsdev';
 import { EpaAdapter } from './epa';
 import { NceiAdapter } from './ncei';
+import { ClimateAdapter } from './climate';
 import { config } from '../config';
 
 /**
@@ -908,6 +909,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
       if (!nceiToken) return undefined;
       return getOrCreate('ncei', () => new NceiAdapter(nceiToken));
     }
+    case 'climate':
+      // Global Warming API — climate indicators, no auth, MIT (UC-342)
+      return getOrCreate('climate', () => new ClimateAdapter());
     default:
       return undefined;
   }

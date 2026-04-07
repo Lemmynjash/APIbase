@@ -206,6 +206,15 @@
     "docs_url": "https://www.ncei.noaa.gov/cdo-web/webservices/v2",
     "limit_proof": "Free API key, 1,000 req/day. US Gov public domain. 100K+ global stations, 260+ years."
   },
+  "climate": {
+    "display_name": "Global Warming API",
+    "health_url": "https://global-warming.org/api/temperature-api",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://global-warming.org/",
+    "limit_proof": "MIT license, no auth, no rate limits. Full dataset per call (89-271KB), cached 24h."
+  },
   "depsdev": {
     "display_name": "deps.dev",
     "health_url": "https://api.deps.dev/v3alpha/systems/npm/packages/express",

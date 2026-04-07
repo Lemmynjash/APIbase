@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 472 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 477 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16100,6 +16100,116 @@
         "required": [
           "location_id"
         ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "climate.indicators.arctic_ice",
+      "title": "Arctic Sea Ice Extent",
+      "description": "Arctic sea ice extent from NSIDC \u2014 monthly measurements in million km\u00b2 since 1979. Tracks long-term decline in Arctic ice coverage. Returns last 10 years by default. Source: National Snow and Ice Data Center.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "years": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of years of data to return (1-50, default 10). Data is monthly."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "climate.indicators.co2",
+      "title": "Atmospheric CO2 (Keeling Curve)",
+      "description": "Atmospheric CO2 concentration from NOAA Mauna Loa Observatory \u2014 the Keeling Curve. Monthly readings in ppm (parts per million) since 1958. Returns last 10 years by default. Source: NOAA ESRL.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "years": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of years of data to return (1-50, default 10). Data is monthly."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "climate.indicators.methane",
+      "title": "Atmospheric Methane",
+      "description": "Atmospheric methane concentration from NOAA ESRL \u2014 monthly readings in ppb (parts per billion) since 1983. Methane is the second most important greenhouse gas after CO2. Returns last 10 years by default.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "years": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of years of data to return (1-50, default 10). Data is monthly."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "climate.indicators.nitrous_oxide",
+      "title": "Atmospheric Nitrous Oxide",
+      "description": "Atmospheric nitrous oxide concentration from NOAA ESRL \u2014 monthly readings in ppb since 2001. N2O is a potent greenhouse gas with 273x the warming potential of CO2. Returns last 10 years by default.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "years": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of years of data to return (1-50, default 10). Data is monthly."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "climate.indicators.temperature",
+      "title": "Global Temperature Anomaly",
+      "description": "Global surface temperature anomaly from NASA GISS \u2014 monthly readings since 1880. Values in \u00b0C vs 1951-1980 baseline. Returns last 10 years by default (adjustable 1-50). Source: NASA Goddard Institute for Space Studies.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "years": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of years of data to return (1-50, default 10). Data is monthly."
+          }
+        }
       },
       "annotations": {
         "readOnlyHint": true,
