@@ -2859,6 +2859,23 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # --- UC-353: USNO Astronomical (Moon, Sun, Seasons) ---
+  - tool_id: usno.moon_phases
+    name: Moon Phases
+    provider: usno
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: usno.sun_moon
+    name: Sun & Moon Rise/Set Times
+    provider: usno
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: usno.seasons
+    name: Equinoxes & Solstices
+    provider: usno
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   - tool_id: platform.call_batch
     name: Batch Tool Calls
     provider: platform

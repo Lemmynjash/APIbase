@@ -4883,4 +4883,35 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'finance',
     annotations: READ_ONLY,
   },
+
+  // ---------------------------------------------------------------------------
+  // USNO — US Naval Observatory Astronomical Data (UC-353, 3 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'usno.moon_phases',
+    mcpName: 'usno.astronomy.moon_phases',
+    title: 'Moon Phases',
+    description:
+      'Get all moon phase dates for a year — New Moon, First Quarter, Full Moon, Last Quarter with exact UTC timestamps. ~50 phases per year. Source: US Naval Observatory (canonical astronomical authority, US Gov public domain).',
+    category: 'space',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'usno.sun_moon',
+    mcpName: 'usno.astronomy.sun_moon',
+    title: 'Sun & Moon Rise/Set Times',
+    description:
+      'Get sunrise, sunset, moonrise, moonset, and transit times for any location and date. Includes civil/nautical/astronomical twilight. Used for photography golden hour, agriculture planning, outdoor events. Source: USNO.',
+    category: 'space',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'usno.seasons',
+    mcpName: 'usno.astronomy.seasons',
+    title: 'Equinoxes & Solstices',
+    description:
+      'Get exact dates and UTC times for vernal equinox, summer solstice, autumnal equinox, and winter solstice for any year. Also includes Earth perihelion and aphelion dates. Source: US Naval Observatory.',
+    category: 'space',
+    annotations: READ_ONLY,
+  },
 ];

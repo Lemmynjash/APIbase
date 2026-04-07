@@ -215,6 +215,15 @@
     "docs_url": "https://www.openfigi.com/api",
     "limit_proof": "Bloomberg open standard (ISO 18774). 25K/day free, higher with key. 300M+ instruments."
   },
+  "usno": {
+    "display_name": "USNO",
+    "health_url": "https://aa.usno.navy.mil/api/seasons?year=2026",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://aa.usno.navy.mil/data/api",
+    "limit_proof": "US Government public domain (US Navy). No auth, no rate limits. Canonical astronomical data."
+  },
   "chart": {
     "display_name": "QuickChart",
     "health_url": "https://quickchart.io/health",

@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 483 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 486 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16465,6 +16465,87 @@
         "required": [
           "tag",
           "period"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "usno.astronomy.moon_phases",
+      "title": "Moon Phases",
+      "description": "Get all moon phase dates for a year \u2014 New Moon, First Quarter, Full Moon, Last Quarter with exact UTC timestamps. ~50 phases per year. Source: US Naval Observatory (canonical astronomical authority, US Gov public domain).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "minimum": 1700,
+            "maximum": 2100,
+            "description": "Year for moon phases (default: current year, e.g. 2026)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "usno.astronomy.seasons",
+      "title": "Equinoxes & Solstices",
+      "description": "Get exact dates and UTC times for vernal equinox, summer solstice, autumnal equinox, and winter solstice for any year. Also includes Earth perihelion and aphelion dates. Source: US Naval Observatory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "minimum": 1700,
+            "maximum": 2100,
+            "description": "Year for equinoxes and solstices (default: current year)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "usno.astronomy.sun_moon",
+      "title": "Sun & Moon Rise/Set Times",
+      "description": "Get sunrise, sunset, moonrise, moonset, and transit times for any location and date. Includes civil/nautical/astronomical twilight. Used for photography golden hour, agriculture planning, outdoor events. Source: USNO.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Date in YYYY-MM-DD format (e.g. 2026-04-07)"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude in decimal degrees (e.g. 40.7128 for New York)",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude in decimal degrees (e.g. -74.0060 for New York)",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "date",
+          "latitude",
+          "longitude"
         ]
       },
       "annotations": {
