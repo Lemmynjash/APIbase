@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 481 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 483 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16393,6 +16393,78 @@
         },
         "required": [
           "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "finance.edgar.xbrl_concept",
+      "title": "SEC Company Financial History",
+      "description": "Complete history of any XBRL financial concept (Revenues, NetIncomeLoss, Assets, EPS) for a company across all SEC filings. Returns up to 20 most recent values with period dates, form type, fiscal year. Free alternative to Bloomberg for historical financials.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cik": {
+            "type": "string",
+            "description": "SEC CIK number (e.g. \"320193\" for Apple, \"789019\" for Microsoft)",
+            "minLength": 1
+          },
+          "tag": {
+            "type": "string",
+            "description": "XBRL concept tag (e.g. Revenues, NetIncomeLoss, Assets, EarningsPerShareBasic)",
+            "minLength": 1
+          },
+          "taxonomy": {
+            "type": "string",
+            "description": "XBRL taxonomy (default: us-gaap). Other: ifrs-full, dei, srt"
+          }
+        },
+        "required": [
+          "cik",
+          "tag"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "finance.edgar.xbrl_frames",
+      "title": "SEC Cross-Company Financial Comparison",
+      "description": "Compare a financial metric across ALL SEC-reporting companies for a period. Query Revenues for CY2023 \u2192 2,649 companies with values. Top: Walmart $648B, UnitedHealth $371B. Free alternative to Bloomberg/FactSet. Period format: CY2023 (annual), CY2023Q4I (quarterly).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string",
+            "description": "XBRL concept tag (e.g. Revenues, NetIncomeLoss, Assets, TotalDebt)",
+            "minLength": 1
+          },
+          "period": {
+            "type": "string",
+            "description": "Reporting period: CY2023 (annual), CY2023Q4I (quarterly instant), CY2023Q3 (quarterly duration)",
+            "minLength": 1
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure (default: USD). Other: USD/shares for EPS, shares for share counts"
+          },
+          "taxonomy": {
+            "type": "string",
+            "description": "XBRL taxonomy (default: us-gaap)"
+          }
+        },
+        "required": [
+          "tag",
+          "period"
         ]
       },
       "annotations": {

@@ -2929,6 +2929,24 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'finance',
     annotations: READ_ONLY,
   },
+  {
+    toolId: 'edgar.xbrl_concept',
+    mcpName: 'finance.edgar.xbrl_concept',
+    title: 'SEC Company Financial History',
+    description:
+      'Complete history of any XBRL financial concept (Revenues, NetIncomeLoss, Assets, EPS) for a company across all SEC filings. Returns up to 20 most recent values with period dates, form type, fiscal year. Free alternative to Bloomberg for historical financials.',
+    category: 'finance',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'edgar.xbrl_frames',
+    mcpName: 'finance.edgar.xbrl_frames',
+    title: 'SEC Cross-Company Financial Comparison',
+    description:
+      'Compare a financial metric across ALL SEC-reporting companies for a period. Query Revenues for CY2023 → 2,649 companies with values. Top: Walmart $648B, UnitedHealth $371B. Free alternative to Bloomberg/FactSet. Period format: CY2023 (annual), CY2023Q4I (quarterly).',
+    category: 'finance',
+    annotations: READ_ONLY,
+  },
 
   {
     toolId: 'bluesky.search_posts',

@@ -26076,6 +26076,188 @@
         ]
       }
     },
+    "/api/v1/tools/edgar.xbrl_concept/call": {
+      "post": {
+        "operationId": "edgar_xbrl_concept",
+        "summary": "SEC Company Financial History",
+        "description": "Complete history of any XBRL financial concept (Revenues, NetIncomeLoss, Assets, EPS) for a company across all SEC filings. Returns up to 20 most recent values with period dates, form type, fiscal year. Free alternative to Bloomberg for historical financials.",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "edgar.xbrl_concept"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cik": {
+                    "type": "string",
+                    "description": "SEC CIK number (e.g. \"320193\" for Apple, \"789019\" for Microsoft)",
+                    "minLength": 1
+                  },
+                  "tag": {
+                    "type": "string",
+                    "description": "XBRL concept tag (e.g. Revenues, NetIncomeLoss, Assets, EarningsPerShareBasic)",
+                    "minLength": 1
+                  },
+                  "taxonomy": {
+                    "type": "string",
+                    "description": "XBRL taxonomy (default: us-gaap). Other: ifrs-full, dei, srt"
+                  }
+                },
+                "required": [
+                  "cik",
+                  "tag"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/edgar.xbrl_frames/call": {
+      "post": {
+        "operationId": "edgar_xbrl_frames",
+        "summary": "SEC Cross-Company Financial Comparison",
+        "description": "Compare a financial metric across ALL SEC-reporting companies for a period. Query Revenues for CY2023 → 2,649 companies with values. Top: Walmart $648B, UnitedHealth $371B. Free alternative to Bloomberg/FactSet. Period format: CY2023 (annual), CY2023Q4I (quarterly).",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.003000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "edgar.xbrl_frames"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tag": {
+                    "type": "string",
+                    "description": "XBRL concept tag (e.g. Revenues, NetIncomeLoss, Assets, TotalDebt)",
+                    "minLength": 1
+                  },
+                  "period": {
+                    "type": "string",
+                    "description": "Reporting period: CY2023 (annual), CY2023Q4I (quarterly instant), CY2023Q3 (quarterly duration)",
+                    "minLength": 1
+                  },
+                  "unit": {
+                    "type": "string",
+                    "description": "Unit of measure (default: USD). Other: USD/shares for EPS, shares for share counts"
+                  },
+                  "taxonomy": {
+                    "type": "string",
+                    "description": "XBRL taxonomy (default: us-gaap)"
+                  }
+                },
+                "required": [
+                  "tag",
+                  "period"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/tools/bluesky.search_posts/call": {
       "post": {
         "operationId": "bluesky_search_posts",

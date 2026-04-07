@@ -1759,6 +1759,16 @@ tools:
     provider: edgar
     price_usd: "0.001"
     cache_ttl: 3600
+  - tool_id: edgar.xbrl_concept
+    name: SEC Company Financial History
+    provider: edgar
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: edgar.xbrl_frames
+    name: SEC Cross-Company Financial Comparison
+    provider: edgar
+    price_usd: "0.003"
+    cache_ttl: 86400
 
   # --- UC-171: Bluesky AT Protocol (Decentralized Social) ---
   - tool_id: bluesky.search_posts
