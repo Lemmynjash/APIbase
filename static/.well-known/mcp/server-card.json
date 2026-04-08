@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 497 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 504 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16840,6 +16840,201 @@
         "required": [
           "search"
         ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "crypto.global",
+      "title": "Crypto Global Stats",
+      "description": "Get global cryptocurrency market statistics",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "include_defi": {
+            "type": "boolean",
+            "description": "Include DeFi-specific global stats"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "finnhub.company_profile",
+      "title": "Company Profile",
+      "description": "Company profile by ticker \u2014 name, exchange, industry, country, market cap, shares outstanding, IPO date, logo, website (Finnhub)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Stock ticker symbol (e.g. \"AAPL\")",
+            "minLength": 1,
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "symbol"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "geo.reverse_geocode",
+      "title": "Reverse Geocode (Geoapify)",
+      "description": "Convert geographic coordinates (lat/lon) to a structured address \u2014 street, city, country, postal code (Geoapify/OSM)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "description": "Latitude of the point to reverse geocode.",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lon": {
+            "type": "number",
+            "description": "Longitude of the point to reverse geocode.",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "lang": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 5,
+            "description": "Result language code (e.g. \"en\", \"de\", \"ru\"). Default: English."
+          }
+        },
+        "required": [
+          "lat",
+          "lon"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "github.user",
+      "title": "GitHub User Profile",
+      "description": "Get a GitHub user profile \u2014 name, bio, public repos count, followers, company, location, join date. Works for users and organizations (GitHub API)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "GitHub username (e.g. \"torvalds\", \"whiteknightonhorse\")"
+          }
+        },
+        "required": [
+          "username"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "usrealestate.property_detail",
+      "title": "US Property Details",
+      "description": "Detailed property information by property ID \u2014 beds, baths, sqft, year built, lot size, tax assessment, HOA, days on market, photos, last sale price/date. Use for_sale search first to get property_id (RapidAPI / Realtor.com data)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "property_id": {
+            "type": "string",
+            "description": "Property ID from a for_sale search result (e.g. \"2734304997\")"
+          }
+        },
+        "required": [
+          "property_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "water.usgs.realtime",
+      "title": "Real-Time Water Data",
+      "description": "Get real-time streamflow (ft^3/s), gage height (ft), water temperature, and conductance for a USGS monitoring site. Updated every 15 minutes. Covers rivers, streams, lakes, reservoirs across the US. Use water.sites to find site numbers (USGS)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "site_no": {
+            "type": "string",
+            "description": "USGS site number (e.g. \"09380000\"). Use water.sites to find site numbers first.",
+            "minLength": 1
+          },
+          "parameter_cd": {
+            "type": "string",
+            "description": "Parameter code(s), comma-separated. Common: 00060=streamflow, 00065=gage height, 00010=temperature. Default: all available."
+          },
+          "period": {
+            "type": "string",
+            "description": "ISO 8601 duration for data window (e.g. \"PT2H\" for 2 hours, \"P7D\" for 7 days). Default: PT2H."
+          }
+        },
+        "required": [
+          "site_no"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "water.usgs.sites",
+      "title": "Search Water Monitoring Sites",
+      "description": "Search 1.5M+ USGS water monitoring sites by US state, county FIPS, bounding box, or site number. Returns site ID, station name, coordinates, altitude, HUC watershed code. Use site numbers with water.realtime for live data (USGS)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "US state FIPS code, 2 chars (e.g. \"CA\", \"NY\", \"CO\")"
+          },
+          "county": {
+            "type": "string",
+            "description": "County FIPS code, 5 digits (e.g. \"06037\" for Los Angeles County)"
+          },
+          "bbox": {
+            "type": "string",
+            "description": "Bounding box: west,south,east,north in decimal degrees (e.g. \"-105.5,39.5,-104.5,40.5\")"
+          },
+          "site_no": {
+            "type": "string",
+            "description": "USGS site number (e.g. \"09380000\" for Colorado River at Lees Ferry)"
+          }
+        }
       },
       "annotations": {
         "readOnlyHint": true,

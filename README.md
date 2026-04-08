@@ -1,6 +1,6 @@
 # APIbase.pro — The API Hub for AI Agents
 
-> One MCP endpoint. 487 tools. 150 providers. Pay per call with x402 (USDC on Base) or MPP (USDC on Tempo).
+> One MCP endpoint. 489 tools. 151 providers. Pay per call with x402 (USDC on Base) or MPP (USDC on Tempo).
 
 **[Live Platform](https://apibase.pro)** | **[Tool Catalog](https://apibase.pro/api/v1/tools)** | **[MCP Endpoint](https://apibase.pro/mcp)** | **[Frameworks](https://apibase.pro/frameworks)** | **[Dashboard](https://apibase.pro/dashboard)**
 
@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/9e598d61-b2d0-486c-bd34-f0cb0354d09c
 
 ## What is APIbase?
 
-Production MCP server that gives AI agents access to 487 real-world API tools through a single endpoint. Agents connect once to `https://apibase.pro/mcp` and can search flights, get stock quotes, translate text, check weather alerts, generate images, send emails, look up holidays, shorten URLs, detect fires by satellite, decode VINs, look up chemical compounds, find EV chargers, batch multiple calls, track usage analytics — and 250+ more tools across 30+ categories.
+Production MCP server that gives AI agents access to 489 real-world API tools through a single endpoint. Agents connect once to `https://apibase.pro/mcp` and can search flights, get stock quotes, translate text, check weather alerts, generate images, send emails, look up holidays, shorten URLs, detect fires by satellite, decode VINs, look up chemical compounds, find EV chargers, batch multiple calls, track usage analytics — and 250+ more tools across 30+ categories.
 
 **Built for AI agents, not humans.** Auto-registration, zero setup, pay-per-call via x402 USDC micropayments on Base or MPP (Machine Payments Protocol) on Tempo.
 
@@ -91,7 +91,7 @@ curl -X POST https://apibase.pro/api/v1/tools/finnhub.quote/call \
 
 ---
 
-## Tool Categories (487 tools, 150 providers)
+## Tool Categories (489 tools, 151 providers)
 
 | Category | Tools | Providers | Examples |
 |----------|-------|-----------|----------|
@@ -147,6 +147,7 @@ curl -X POST https://apibase.pro/api/v1/tools/finnhub.quote/call \
 | **Infrastructure** | 6 | Cloudflare | DNS management, CDN cache, traffic analytics |
 | **Browser** | 4 | Browserbase | Managed browser sessions, screenshots, scraping |
 | **Earthquakes** | 3 | USGS | Global seismic data, real-time feeds |
+| **Water Data** | 2 | USGS Water Services | Streamflow gauge sites, real-time water level & discharge |
 | **Disasters** | 3 | GDACS | UN global disaster alerts (earthquakes, floods, hurricanes, volcanoes) |
 | **IP Intelligence** | 2 | ipapi.is | Geolocation, VPN/proxy detection |
 | **Vehicle Data** | 9 | NHTSA, Auto.dev, MarketCheck | VIN decoder, recalls, safety ratings, car listings, market data |
@@ -413,13 +414,13 @@ GET  /.well-known/x402-payment.json     → Payment config (network, facilitator
 GET  /.well-known/openapi.json          → OpenAPI 3.1 spec (with x-payment-info)
 GET  /ai.txt                            → Plain text AI agent discovery
 GET  /llms.txt                          → Concise LLM context
-GET  /api/v1/tools                      → Live tool catalog (all 487 tools, JSON schemas)
+GET  /api/v1/tools                      → Live tool catalog (all 489 tools, JSON schemas)
 GET  /health/ready                      → System health check
 POST /mcp  prompts/get discover_tools   → Browse tools by category or task (progressive disclosure)
 GET  /frameworks                        → Integration guides for 9 frameworks
 ```
 
-**Progressive disclosure:** Instead of loading all 487 tool schemas into context, agents can call the `discover_tools` prompt to find relevant tools first:
+**Progressive disclosure:** Instead of loading all 489 tool schemas into context, agents can call the `discover_tools` prompt to find relevant tools first:
 - `discover_tools` (no args) → 21 categories with tool counts
 - `discover_tools category="travel"` → 17 travel tools
 - `discover_tools task="check earthquake near Tokyo"` → matching tools ranked by relevance

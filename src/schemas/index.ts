@@ -150,6 +150,7 @@ import { emailVerifySchemas } from './email-verify.schema';
 import { solarSchemas } from './solar.schema';
 import { issSchemas } from './iss.schema';
 import { hfSchemas } from './hf.schema';
+import { waterSchemas } from './water.schema';
 
 export const toolSchemas: Record<string, ZodSchema> = {
   ...weatherSchemas,
@@ -303,4 +304,5 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...solarSchemas,
   ...issSchemas,
   ...hfSchemas,
+  ...waterSchemas,
 };

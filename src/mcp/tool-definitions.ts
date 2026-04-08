@@ -5033,4 +5033,25 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'developer',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // USGS Water Services — real-time streamflow & water levels (UC-369)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'water.sites',
+    mcpName: 'water.usgs.sites',
+    title: 'Search USGS Water Monitoring Sites',
+    description:
+      'Search 1.5M+ USGS water monitoring sites by US state, county FIPS, bounding box, or site number. Returns site ID, station name, coordinates, altitude, HUC watershed code. Use site numbers with water.realtime for live data (USGS)',
+    category: 'world',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'water.realtime',
+    mcpName: 'water.usgs.realtime',
+    title: 'Get Real-Time Water Data',
+    description:
+      'Get real-time streamflow (ft^3/s), gage height (ft), water temperature, and conductance for a USGS monitoring site. Updated every 15 minutes. Covers rivers, streams, lakes, reservoirs across the US. Use water.sites to find site numbers (USGS)',
+    category: 'world',
+    annotations: READ_ONLY,
+  },
 ];

@@ -2941,6 +2941,18 @@ tools:
     price_usd: "0.001"
     cache_ttl: 3600
 
+  # USGS Water Services (UC-369) — real-time streamflow & water levels
+  - tool_id: water.sites
+    name: Search Water Monitoring Sites
+    provider: usgs-water
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: water.realtime
+    name: Real-Time Water Data
+    provider: usgs-water
+    price_usd: "0.001"
+    cache_ttl: 900
+
   - tool_id: platform.call_batch
     name: Batch Tool Calls
     provider: platform

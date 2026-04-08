@@ -260,6 +260,15 @@
     "docs_url": "https://huggingface.co/docs/hub/api",
     "limit_proof": "No auth for read, no documented rate limits. 1M+ models, 200K+ datasets."
   },
+  "usgs-water": {
+    "display_name": "USGS Water Services",
+    "health_url": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=09380000&parameterCd=00060&period=PT1H",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://waterservices.usgs.gov/rest/",
+    "limit_proof": "US Gov public domain. No auth, no documented rate limits. 1.5M+ monitoring sites."
+  },
   "solar": {
     "display_name": "Solar System",
     "health_url": "https://api.le-systeme-solaire.net/rest/bodies/mars",
