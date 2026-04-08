@@ -260,6 +260,15 @@
     "docs_url": "https://huggingface.co/docs/hub/api",
     "limit_proof": "No auth for read, no documented rate limits. 1M+ models, 200K+ datasets."
   },
+  "worldbank": {
+    "display_name": "World Bank Indicators",
+    "health_url": "https://api.worldbank.org/v2/indicator?format=json&per_page=1",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+    "limit_proof": "CC BY 4.0. No auth, no documented rate limits. 16,000+ indicators, 300 countries."
+  },
   "usgs-water": {
     "display_name": "USGS Water Services",
     "health_url": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=09380000&parameterCd=00060&period=PT1H",

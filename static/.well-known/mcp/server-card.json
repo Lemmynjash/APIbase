@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 504 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 505 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -17033,6 +17033,40 @@
           "site_no": {
             "type": "string",
             "description": "USGS site number (e.g. \"09380000\" for Colorado River at Lees Ferry)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "worldbank.dev.indicators",
+      "title": "Search Development Indicators",
+      "description": "Search 16,000+ World Bank development indicators by keyword or topic \u2014 GDP, population, poverty, education, health, environment, trade. Returns indicator ID, name, source, description, topics. Use indicator IDs with finance.country_data for time-series data (World Bank, CC BY 4.0)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "Search keyword for indicators (e.g. \"gdp\", \"population\", \"poverty\", \"education\", \"co2 emissions\")"
+          },
+          "topic": {
+            "type": "string",
+            "description": "Topic ID filter (1=Agriculture, 3=Economy, 4=Education, 6=Environment, 8=Health, 11=Poverty, 14=Science, 19=Climate Change)"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source ID filter (2=World Development Indicators, 11=Africa, 57=Gender)"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Results per page (1-50, default 20)"
           }
         }
       },

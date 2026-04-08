@@ -5054,4 +5054,16 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'world',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // World Bank Indicators — global development data (UC-372)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'worldbank.indicators',
+    mcpName: 'worldbank.dev.indicators',
+    title: 'Search Development Indicators',
+    description:
+      'Search 16,000+ World Bank development indicators by keyword or topic — GDP, population, poverty, education, health, environment, trade. Returns indicator ID, name, source, description, topics. Use indicator IDs with finance.country_data for time-series data (World Bank, CC BY 4.0)',
+    category: 'finance',
+    annotations: READ_ONLY,
+  },
 ];

@@ -2941,6 +2941,13 @@ tools:
     price_usd: "0.001"
     cache_ttl: 3600
 
+  # World Bank Indicators (UC-372) — 16K+ global development indicators
+  - tool_id: worldbank.indicators
+    name: Search Development Indicators
+    provider: worldbank
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   # USGS Water Services (UC-369) — real-time streamflow & water levels
   - tool_id: water.sites
     name: Search Water Monitoring Sites

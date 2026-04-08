@@ -151,6 +151,7 @@ import { SolarAdapter } from './solar';
 import { IssAdapter } from './iss';
 import { HfAdapter } from './hf';
 import { UsgsWaterAdapter } from './usgs-water';
+import { WorldBankAdapter } from './worldbank';
 import { config } from '../config';
 
 /**
@@ -960,6 +961,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'water':
       // USGS Water Services — real-time streamflow + water levels, no auth (UC-369)
       return getOrCreate('usgs-water', () => new UsgsWaterAdapter());
+    case 'worldbank':
+      // World Bank Indicators — 16K+ global development indicators, no auth (UC-372)
+      return getOrCreate('worldbank', () => new WorldBankAdapter());
     default:
       return undefined;
   }
