@@ -242,6 +242,15 @@
     "docs_url": "https://emailverification.whoisxmlapi.com/api",
     "limit_proof": "Credits shared with WhoisXML account (500 free on signup). SMTP + DNS + disposable detection."
   },
+  "solar": {
+    "display_name": "Solar System",
+    "health_url": "https://api.le-systeme-solaire.net/rest/bodies/mars",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://api.le-systeme-solaire.net",
+    "limit_proof": "MIT license. Free Bearer token. 1,400+ solar system bodies."
+  },
   "chart": {
     "display_name": "QuickChart",
     "health_url": "https://quickchart.io/health",

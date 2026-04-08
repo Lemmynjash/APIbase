@@ -147,6 +147,7 @@ import { figiSchemas } from './figi.schema';
 import { usnoSchemas } from './usno.schema';
 import { wgerSchemas } from './wger.schema';
 import { emailVerifySchemas } from './email-verify.schema';
+import { solarSchemas } from './solar.schema';
 
 export const toolSchemas: Record<string, ZodSchema> = {
   ...weatherSchemas,
@@ -297,4 +298,5 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...usnoSchemas,
   ...wgerSchemas,
   ...emailVerifySchemas,
+  ...solarSchemas,
 };

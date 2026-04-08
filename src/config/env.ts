@@ -329,6 +329,9 @@ export const appEnvSchema = z.object({
   // OpenFIGI (UC-357) — Bloomberg financial identifier resolution, 25K/day free
   PROVIDER_KEY_OPENFIGI: z.string().optional().default(''),
 
+  // Solar System OpenData (UC-354) — planetary science, MIT license
+  PROVIDER_KEY_SOLARSYSTEM: z.string().optional().default(''),
+
   // Predictive Pre-fetching (F8) — fire-and-forget cache warming
   PREFETCH_ENABLED: z.string().optional().default('false'),
 

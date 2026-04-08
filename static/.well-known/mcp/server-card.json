@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 490 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 492 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -16647,6 +16647,58 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "solar.system.bodies",
+      "title": "Solar System Bodies",
+      "description": "List solar system bodies \u2014 planets, moons, asteroids, comets, dwarf planets. Returns name, body type, gravity, radius, and moon count. 1,400+ bodies. Filter by type. Source: Solar System OpenData (MIT license).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "body_type": {
+            "type": "string",
+            "enum": [
+              "planet",
+              "moon",
+              "asteroid",
+              "comet",
+              "dwarf_planet",
+              "all"
+            ],
+            "description": "Filter by body type: planet, moon, asteroid, comet, dwarf_planet, or all (default: all)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "solar.system.body_details",
+      "title": "Solar System Body Details",
+      "description": "Get comprehensive data for a solar system body \u2014 mass, radius, density, gravity, escape velocity, temperature, axial tilt, orbital period, semi-major axis, eccentricity, inclination, discoverer, and list of moons. Source: Solar System OpenData.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Body ID from search results (e.g. \"mars\", \"jupiter\", \"moon\", \"europa\", \"ceres\")",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
         ]
       },
       "annotations": {

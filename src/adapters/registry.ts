@@ -147,6 +147,7 @@ import { FigiAdapter } from './figi';
 import { UsnoAdapter } from './usno';
 import { WgerAdapter } from './wger';
 import { EmailVerifyAdapter } from './email-verify';
+import { SolarAdapter } from './solar';
 import { config } from '../config';
 
 /**
@@ -939,6 +940,13 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
       const evKey = (config as Record<string, unknown>).PROVIDER_KEY_WHOISXML as string | undefined;
       if (!evKey) return undefined;
       return getOrCreate('email_verify', () => new EmailVerifyAdapter(evKey));
+    }
+    case 'solar': {
+      const solarKey = (config as Record<string, unknown>).PROVIDER_KEY_SOLARSYSTEM as
+        | string
+        | undefined;
+      if (!solarKey) return undefined;
+      return getOrCreate('solar', () => new SolarAdapter(solarKey));
     }
     default:
       return undefined;

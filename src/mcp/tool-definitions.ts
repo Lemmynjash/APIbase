@@ -4958,4 +4958,26 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'messaging',
     annotations: READ_ONLY,
   },
+
+  // ---------------------------------------------------------------------------
+  // Solar System OpenData (UC-354, 2 tools)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'solar.bodies',
+    mcpName: 'solar.system.bodies',
+    title: 'Solar System Bodies',
+    description:
+      'List solar system bodies — planets, moons, asteroids, comets, dwarf planets. Returns name, body type, gravity, radius, and moon count. 1,400+ bodies. Filter by type. Source: Solar System OpenData (MIT license).',
+    category: 'space',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'solar.body_details',
+    mcpName: 'solar.system.body_details',
+    title: 'Solar System Body Details',
+    description:
+      'Get comprehensive data for a solar system body — mass, radius, density, gravity, escape velocity, temperature, axial tilt, orbital period, semi-major axis, eccentricity, inclination, discoverer, and list of moons. Source: Solar System OpenData.',
+    category: 'space',
+    annotations: READ_ONLY,
+  },
 ];
