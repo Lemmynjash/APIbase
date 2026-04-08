@@ -99,7 +99,16 @@ export class HfAdapter extends BaseAdapter {
   }
 
   private parseModels(body: unknown): HfModelsOutput {
-    const models = Array.isArray(body) ? body : [];
+    if (!Array.isArray(body)) {
+      throw {
+        code: ProviderErrorCode.INVALID_RESPONSE,
+        httpStatus: 502,
+        message: `HuggingFace returned non-array for models: ${JSON.stringify(body).slice(0, 200)}`,
+        provider: this.provider,
+        durationMs: 0,
+      };
+    }
+    const models = body;
     return {
       total: models.length,
       results: models.map(
@@ -130,7 +139,16 @@ export class HfAdapter extends BaseAdapter {
   }
 
   private parseDatasets(body: unknown): HfDatasetsOutput {
-    const datasets = Array.isArray(body) ? body : [];
+    if (!Array.isArray(body)) {
+      throw {
+        code: ProviderErrorCode.INVALID_RESPONSE,
+        httpStatus: 502,
+        message: `HuggingFace returned non-array for datasets: ${JSON.stringify(body).slice(0, 200)}`,
+        provider: this.provider,
+        durationMs: 0,
+      };
+    }
+    const datasets = body;
     return {
       total: datasets.length,
       results: datasets.map(
