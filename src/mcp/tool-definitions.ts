@@ -5150,4 +5150,25 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'entertainment',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // Rijksmuseum — Dutch national museum art collection (UC-379)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'rijks.search',
+    mcpName: 'rijks.art.search',
+    title: 'Search Rijksmuseum Collection',
+    description:
+      'Search 800,000+ artworks at the Rijksmuseum (Dutch national museum) by title, description, creation date, or object number. Returns Linked Open Data object IDs — use rijks.details for full metadata. Covers Rembrandt, Vermeer, Van Gogh, and centuries of Dutch art. CC-BY license (Rijksmuseum)',
+    category: 'entertainment',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'rijks.details',
+    mcpName: 'rijks.art.details',
+    title: 'Get Rijksmuseum Artwork Details',
+    description:
+      'Get full details for a Rijksmuseum artwork by object ID — title (multiple languages), object number, creation date, production location, materials, dimensions, current gallery location. Linked Art JSON-LD format (CIDOC CRM). Use rijks.search to find object IDs first (Rijksmuseum, CC-BY)',
+    category: 'entertainment',
+    annotations: READ_ONLY,
+  },
 ];

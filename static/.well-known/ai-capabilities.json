@@ -2,8 +2,8 @@
   "platform": "APIbase",
   "version": "2.0",
   "updated_at": "2026-04-01T00:00:00Z",
-  "tools_count": 498,
-  "providers_count": 156,
+  "tools_count": 500,
+  "providers_count": 157,
   "mcp_endpoint": "https://apibase.pro/mcp",
   "discovery": {
     "method": "MCP prompt",
@@ -79,8 +79,8 @@
     },
     {
       "name": "entertainment",
-      "tools": 46,
-      "providers": "TMDB, Ticketmaster, RAWG, IGDB, Jikan, MusicBrainz, PodcastIndex, API-Sports, Met Museum",
+      "tools": 48,
+      "providers": "TMDB, Ticketmaster, RAWG, IGDB, Jikan, MusicBrainz, PodcastIndex, API-Sports, Met Museum, Rijksmuseum",
       "examples": "movies, events, games, anime, music, podcasts, sports, art collections"
     },
     {

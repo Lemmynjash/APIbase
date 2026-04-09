@@ -2948,6 +2948,18 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # Rijksmuseum (UC-379) — Dutch national museum, CC-BY, new Linked Open Data API
+  - tool_id: rijks.search
+    name: Search Rijksmuseum Collection
+    provider: rijksmuseum
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: rijks.details
+    name: Rijksmuseum Artwork Details
+    provider: rijksmuseum
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   # Met Museum (UC-373) — Open Access art collection, CC0
   - tool_id: met.search
     name: Search Met Museum Artworks

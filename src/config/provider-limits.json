@@ -260,6 +260,15 @@
     "docs_url": "https://huggingface.co/docs/hub/api",
     "limit_proof": "No auth for read, no documented rate limits. 1M+ models, 200K+ datasets."
   },
+  "rijksmuseum": {
+    "display_name": "Rijksmuseum",
+    "health_url": "https://data.rijksmuseum.nl/search/collection?title=Night+Watch",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://data.rijksmuseum.nl/",
+    "limit_proof": "CC-BY license. New Linked Open Data Search API — no auth required (legacy Collection API deprecated 2026). 800K+ artworks."
+  },
   "met-museum": {
     "display_name": "Met Museum",
     "health_url": "https://collectionapi.metmuseum.org/public/collection/v1/objects/436524",

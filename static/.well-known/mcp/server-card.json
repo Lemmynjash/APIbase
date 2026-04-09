@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 513 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 515 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -17375,6 +17375,62 @@
         "required": [
           "query"
         ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "rijks.art.details",
+      "title": "Rijksmuseum Artwork Details",
+      "description": "Get full details for a Rijksmuseum artwork by object ID \u2014 title (multiple languages), object number, creation date, production location, materials, dimensions, current gallery location. Linked Art JSON-LD format (CIDOC CRM). Use rijks.search to find object IDs first (Rijksmuseum, CC-BY)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "object_id": {
+            "type": "string",
+            "description": "Rijksmuseum numeric ID (e.g. \"200107928\" for The Night Watch). Use rijks.search to find IDs.",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "object_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "rijks.art.search",
+      "title": "Search Rijksmuseum Collection",
+      "description": "Search 800,000+ artworks at the Rijksmuseum (Dutch national museum) by title, description, creation date, or object number. Returns Linked Open Data object IDs \u2014 use rijks.details for full metadata. Covers Rembrandt, Vermeer, Van Gogh, and centuries of Dutch art. CC-BY license (Rijksmuseum)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Artwork title search (e.g. \"Night Watch\", \"Self-portrait\", \"Milkmaid\")"
+          },
+          "description": {
+            "type": "string",
+            "description": "Search within artwork descriptions (e.g. \"portrait\", \"landscape\")"
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Filter by creation year or date (e.g. \"1642\", \"1665\")"
+          },
+          "object_number": {
+            "type": "string",
+            "description": "Rijksmuseum object number (e.g. \"SK-C-5\" for Night Watch)"
+          }
+        }
       },
       "annotations": {
         "readOnlyHint": true,
