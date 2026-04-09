@@ -5087,4 +5087,25 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'health',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // DBLP — Computer Science bibliography (UC-370)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'dblp.search',
+    mcpName: 'dblp.cs.search',
+    title: 'Search CS Papers',
+    description:
+      'Search 7M+ computer science publications on DBLP by title, keyword, or topic. Returns title, authors, venue (NeurIPS, ICML, CVPR, ACL, etc.), year, DOI. The largest CS-specific bibliography — covers journals, conferences, and workshops (DBLP, CC0)',
+    category: 'education',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'dblp.author',
+    mcpName: 'dblp.cs.author',
+    title: 'Search CS Authors',
+    description:
+      'Search 3M+ computer science authors on DBLP. Returns author name, DBLP PID, profile URL, aliases, affiliations. Use for finding researchers, checking publication records, or discovering collaborators (DBLP, CC0)',
+    category: 'education',
+    annotations: READ_ONLY,
+  },
 ];

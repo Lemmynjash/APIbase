@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 507 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 509 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -17143,6 +17143,70 @@
         },
         "required": [
           "dataset_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "dblp.cs.author",
+      "title": "Search CS Authors",
+      "description": "Search 3M+ computer science authors on DBLP. Returns author name, DBLP PID, profile URL, aliases, affiliations. Use for finding researchers, checking publication records, or discovering collaborators (DBLP, CC0)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Author name to search (e.g. \"Geoffrey Hinton\", \"Yann LeCun\", \"Ilya Sutskever\")",
+            "minLength": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30,
+            "description": "Number of results (1-30, default 10)"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "dblp.cs.search",
+      "title": "Search CS Papers",
+      "description": "Search 7M+ computer science publications on DBLP by title, keyword, or topic. Returns title, authors, venue (NeurIPS, ICML, CVPR, ACL, etc.), year, DOI. The largest CS-specific bibliography \u2014 covers journals, conferences, and workshops (DBLP, CC0)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query \u2014 paper title, keyword, or topic (e.g. \"transformer attention\", \"graph neural network\", \"LLM reasoning\")",
+            "minLength": 1
+          },
+          "year": {
+            "type": "integer",
+            "description": "Filter by publication year (e.g. 2024)"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of results (1-50, default 20)"
+          }
+        },
+        "required": [
+          "query"
         ]
       },
       "annotations": {

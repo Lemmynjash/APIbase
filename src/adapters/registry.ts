@@ -153,6 +153,7 @@ import { HfAdapter } from './hf';
 import { UsgsWaterAdapter } from './usgs-water';
 import { WorldBankAdapter } from './worldbank';
 import { CdcAdapter } from './cdc';
+import { DblpAdapter } from './dblp';
 import { config } from '../config';
 
 /**
@@ -968,6 +969,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'cdc':
       // CDC Open Data — US public health datasets via Socrata SODA, no auth (UC-371)
       return getOrCreate('cdc', () => new CdcAdapter());
+    case 'dblp':
+      // DBLP — CS bibliography, 7M+ papers, 3M+ authors, CC0, no auth (UC-370)
+      return getOrCreate('dblp', () => new DblpAdapter());
     default:
       return undefined;
   }

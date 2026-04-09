@@ -1,6 +1,6 @@
 # APIbase.pro — The API Hub for AI Agents
 
-> One MCP endpoint. 492 tools. 153 providers. Pay per call with x402 (USDC on Base) or MPP (USDC on Tempo).
+> One MCP endpoint. 494 tools. 154 providers. Pay per call with x402 (USDC on Base) or MPP (USDC on Tempo).
 
 **[Live Platform](https://apibase.pro)** | **[Tool Catalog](https://apibase.pro/api/v1/tools)** | **[MCP Endpoint](https://apibase.pro/mcp)** | **[Frameworks](https://apibase.pro/frameworks)** | **[Dashboard](https://apibase.pro/dashboard)**
 
@@ -91,7 +91,7 @@ curl -X POST https://apibase.pro/api/v1/tools/finnhub.quote/call \
 
 ---
 
-## Tool Categories (492 tools, 153 providers)
+## Tool Categories (494 tools, 154 providers)
 
 | Category | Tools | Providers | Examples |
 |----------|-------|-----------|----------|
@@ -119,7 +119,7 @@ curl -X POST https://apibase.pro/api/v1/tools/finnhub.quote/call \
 | **Disease Data** | 7 | disease.sh, WHO GHO | COVID/Influenza global disease statistics, WHO global health data |
 | **Clinical Trials** | 3 | ClinicalTrials.gov | 577K+ trials, drug research, recruiting |
 | **Nutrition Database** | 2 | FatSecret | 2.3M+ foods, calories, macros, vitamins |
-| **Education & Research** | 7 | OpenAlex, arXiv, PubMed, CrossRef | Papers, colleges, DOI lookup |
+| **Education & Research** | 9 | OpenAlex, arXiv, PubMed, CrossRef, DBLP | Papers, colleges, DOI lookup, CS bibliography |
 | **Jobs & Career** | 20 | Adzuna, TheirStack, Jooble, Reed, Remotive, Arbeitnow, BLS, ESCO | Global job search, UK/EU/remote, salary data, tech stack analysis |
 | **Legal & Regulatory** | 8 | Regulations.gov, Federal Register, CourtListener | US regulations, court opinions, executive orders |
 | **Air Quality** | 2 | IQAir AirVisual | AQI, pollutants (PM2.5/O3), 30K+ stations |

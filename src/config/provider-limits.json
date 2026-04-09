@@ -260,6 +260,15 @@
     "docs_url": "https://huggingface.co/docs/hub/api",
     "limit_proof": "No auth for read, no documented rate limits. 1M+ models, 200K+ datasets."
   },
+  "dblp": {
+    "display_name": "DBLP",
+    "health_url": "https://dblp.org/search/publ/api?q=test&format=json&h=1",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://dblp.org/faq/How+to+use+the+dblp+search+API.html",
+    "limit_proof": "CC0 public domain. No auth, no documented rate limits. 7M+ CS publications."
+  },
   "cdc": {
     "display_name": "CDC Open Data",
     "health_url": "https://api.us.socrata.com/api/catalog/v1?domains=data.cdc.gov&limit=1",

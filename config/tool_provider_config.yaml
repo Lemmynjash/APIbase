@@ -2948,6 +2948,18 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # DBLP (UC-370) — Computer Science bibliography
+  - tool_id: dblp.search
+    name: Search CS Papers
+    provider: dblp
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: dblp.author
+    name: Search CS Authors
+    provider: dblp
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   # CDC Open Data (UC-371) — US public health datasets via Socrata SODA
   - tool_id: cdc.datasets
     name: Search CDC Health Datasets
