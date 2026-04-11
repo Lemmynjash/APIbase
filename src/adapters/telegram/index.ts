@@ -6,11 +6,17 @@ export class TelegramAdapter extends BaseAdapter {
   private readonly token: string;
 
   constructor(token: string) {
-    super({ timeout: 10_000, maxRetries: 1, maxResponseSize: 512_000 });
+    super({
+      provider: 'telegram',
+      baseUrl: `https://api.telegram.org/bot${token}`,
+      timeoutMs: 10_000,
+      maxRetries: 1,
+      maxResponseBytes: 512_000,
+    });
     this.token = token;
   }
 
-  private baseUrl(): string {
+  private apiUrl(): string {
     return `https://api.telegram.org/bot${this.token}`;
   }
 
@@ -29,7 +35,9 @@ export class TelegramAdapter extends BaseAdapter {
         const textToCheck = String(params.text ?? '');
         const filter = checkContent(textToCheck);
         if (!filter.allowed) {
-          throw new Error(`CONTENT_BLOCKED: ${filter.reason} (matched: "${filter.matched}"). Message not sent.`);
+          throw new Error(
+            `CONTENT_BLOCKED: ${filter.reason} (matched: "${filter.matched}"). Message not sent.`,
+          );
         }
         const payload: Record<string, unknown> = {
           chat_id: params.chat_id,
@@ -37,7 +45,12 @@ export class TelegramAdapter extends BaseAdapter {
         };
         if (params.parse_mode) payload.parse_mode = params.parse_mode;
         if (params.disable_notification) payload.disable_notification = true;
-        return { url: `${this.baseUrl()}/sendMessage`, method: 'POST', headers, body: JSON.stringify(payload) };
+        return {
+          url: `${this.apiUrl()}/sendMessage`,
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        };
       }
 
       case 'telegram.send_photo': {
@@ -45,7 +58,9 @@ export class TelegramAdapter extends BaseAdapter {
         if (params.caption) {
           const filter = checkContent(String(params.caption));
           if (!filter.allowed) {
-            throw new Error(`CONTENT_BLOCKED: ${filter.reason} (matched: "${filter.matched}"). Photo not sent.`);
+            throw new Error(
+              `CONTENT_BLOCKED: ${filter.reason} (matched: "${filter.matched}"). Photo not sent.`,
+            );
           }
         }
         const payload: Record<string, unknown> = {
@@ -53,7 +68,12 @@ export class TelegramAdapter extends BaseAdapter {
           photo: params.photo,
         };
         if (params.caption) payload.caption = params.caption;
-        return { url: `${this.baseUrl()}/sendPhoto`, method: 'POST', headers, body: JSON.stringify(payload) };
+        return {
+          url: `${this.apiUrl()}/sendPhoto`,
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        };
       }
 
       case 'telegram.send_document': {
@@ -61,7 +81,9 @@ export class TelegramAdapter extends BaseAdapter {
         if (params.caption) {
           const filter = checkContent(String(params.caption));
           if (!filter.allowed) {
-            throw new Error(`CONTENT_BLOCKED: ${filter.reason} (matched: "${filter.matched}"). Document not sent.`);
+            throw new Error(
+              `CONTENT_BLOCKED: ${filter.reason} (matched: "${filter.matched}"). Document not sent.`,
+            );
           }
         }
         const payload: Record<string, unknown> = {
@@ -69,19 +91,24 @@ export class TelegramAdapter extends BaseAdapter {
           document: params.document,
         };
         if (params.caption) payload.caption = params.caption;
-        return { url: `${this.baseUrl()}/sendDocument`, method: 'POST', headers, body: JSON.stringify(payload) };
+        return {
+          url: `${this.apiUrl()}/sendDocument`,
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        };
       }
 
       case 'telegram.get_updates': {
         const qs = new URLSearchParams();
         qs.set('limit', String(params.limit ?? 10));
         if (params.offset) qs.set('offset', String(params.offset));
-        return { url: `${this.baseUrl()}/getUpdates?${qs}`, method: 'GET', headers: {} };
+        return { url: `${this.apiUrl()}/getUpdates?${qs}`, method: 'GET', headers: {} };
       }
 
       case 'telegram.get_chat': {
         return {
-          url: `${this.baseUrl()}/getChat`,
+          url: `${this.apiUrl()}/getChat`,
           method: 'POST',
           headers,
           body: JSON.stringify({ chat_id: params.chat_id }),
@@ -97,10 +124,18 @@ export class TelegramAdapter extends BaseAdapter {
     const body = typeof raw.body === 'string' ? JSON.parse(raw.body) : raw.body;
 
     if (!body?.ok) {
-      return { ...raw, status: 502, body: { error: body?.description ?? 'Telegram API error', code: body?.error_code } };
+      return {
+        ...raw,
+        status: 502,
+        body: { error: body?.description ?? 'Telegram API error', code: body?.error_code },
+      };
     }
 
-    if (req.toolId === 'telegram.send_message' || req.toolId === 'telegram.send_photo' || req.toolId === 'telegram.send_document') {
+    if (
+      req.toolId === 'telegram.send_message' ||
+      req.toolId === 'telegram.send_photo' ||
+      req.toolId === 'telegram.send_document'
+    ) {
       const msg = body.result;
       return {
         ...raw,
