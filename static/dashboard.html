@@ -12,7 +12,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'JetBrains Mono','Fira Code','Cascadia Code','Courier New',monospace;background:#1a1a2e;color:#b0ffb0;line-height:1.7;padding:1.5rem;min-height:100vh;display:flex;justify-content:center;align-items:flex-start}
-.window{max-width:960px;width:100%;background:#0c0c0c;border-radius:10px 10px 8px 8px;border:1px solid #444;box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 80px rgba(0,255,65,0.04),inset 0 0 80px rgba(0,255,65,0.01);overflow:hidden;position:relative}
+.window{max-width:960px;width:100%;background:#0c0c0c;border-radius:10px 10px 8px 8px;border:1px solid #444;box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 80px rgba(0,255,65,0.04),inset 0 0 80px rgba(0,255,65,0.01);overflow:visible;position:relative}
 .window::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.06) 0px,rgba(0,0,0,0.06) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2}
 .window::before{content:'';position:absolute;top:-100%;left:0;right:0;height:60px;background:linear-gradient(180deg,transparent 0%,rgba(0,255,65,0.03) 50%,transparent 100%);pointer-events:none;z-index:3;animation:scanline 8s linear infinite}
 @keyframes scanline{0%{top:-60px}100%{top:100%}}
@@ -207,7 +207,7 @@ tr.lat-border-unknown td:first-child{border-left:2px solid #333}
     // Music
     'Music / Audio': 'Music',
     // Health
-    'Health & Nutrition': 'Health', 'FatSecret Nutrition': 'Health', 'Spoonacular Recipe': 'Health', 'disease.sh (COVID/Influenza)': 'Health', 'Wger Workout': 'Health',
+    'Health & Nutrition': 'Health', 'FatSecret Nutrition': 'Health', 'disease.sh (COVID/Influenza)': 'Health', 'Wger Workout': 'Health',
     'PubChem (NCBI)': 'Chemistry',
     'Open Charge Map (EV)': 'EV Charging',
     'IPQualityScore': 'Fraud Detection',
@@ -291,8 +291,6 @@ tr.lat-border-unknown td:first-child{border-left:2px solid #333}
     'PodcastIndex': 'Podcasts',
     // Business
     'Hunter.io': 'Business',
-    // Foursquare
-    'Foursquare': 'Places',
     // Spoonacular
     'Spoonacular Recipe': 'Recipes',
     // WHO
@@ -423,7 +421,7 @@ tr.lat-border-unknown td:first-child{border-left:2px solid #333}
     document.getElementById('t-providers').textContent = data.totals.providers;
     document.getElementById('t-tools').textContent = formatNum(data.totals.tools);
     document.getElementById('t-calls').textContent = formatNum(data.totals.calls_24h);
-    document.getElementById('gen-time').textContent = 'Generated: ' + new Date(data.generated_at).toLocaleTimeString();
+    var genDate = new Date(data.generated_at); document.getElementById('gen-time').textContent = 'Updated: ' + genDate.toLocaleTimeString() + ' ' + genDate.toLocaleDateString() + ' UTC';
     renderPaymentStatus(data);
     renderCategoryFilter(data);
 
@@ -474,7 +472,9 @@ tr.lat-border-unknown td:first-child{border-left:2px solid #333}
         html += '<span style="color:' + balColor + ';font-weight:bold">$' + p.balance.balance_usd.toFixed(2) + '</span>';
       } else if (p.limits.type === 'unlimited') html += 'Unlimited';
       else if (p.limits.status === 'paid') html += 'Paid';
-      else html += formatNum(p.limits.used) + '/' + formatNum(p.limits.free_limit) + ' (' + p.limits.pct_remaining + '%)';
+      else if (p.limits.type === 'rate_limited' && p.limits.free_limit === 0) html += '<span style="color:#888">Rate Limited</span>';
+      else if (p.limits.used > p.limits.free_limit && p.limits.free_limit > 0) html += '<span style="color:#ff4444;font-weight:bold">OVER ' + formatNum(p.limits.used) + '/' + formatNum(p.limits.free_limit) + '</span>';
+      else html += formatNum(p.limits.used) + '/' + formatNum(p.limits.free_limit) + ' (' + p.limits.pct_remaining + '%) <span style="opacity:0.4;font-size:0.8em">/' + (p.limits.type === 'monthly' ? 'mo' : p.limits.type === 'daily' ? 'day' : p.limits.type === 'credits' ? 'cr' : '') + '</span>';
       html += '</td>';
       html += '<td>' + formatNum(p.calls_24h);
       if (p.usage && p.usage.calls_total > 0) html += ' <span style="opacity:0.5;font-size:0.85em">/ ' + formatNum(p.usage.calls_total) + ' total</span>';
