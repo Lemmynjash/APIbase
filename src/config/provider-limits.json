@@ -260,6 +260,15 @@
     "docs_url": "https://huggingface.co/docs/hub/api",
     "limit_proof": "No auth for read, no documented rate limits. 1M+ models, 200K+ datasets."
   },
+  "cma": {
+    "display_name": "Cleveland Museum of Art",
+    "health_url": "https://openaccess-api.clevelandart.org/api/artworks/?limit=1",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://openaccess-api.clevelandart.org/",
+    "limit_proof": "CC0 images. No auth, no documented rate limits. 64K+ artworks."
+  },
   "rijksmuseum": {
     "display_name": "Rijksmuseum",
     "health_url": "https://data.rijksmuseum.nl/search/collection?title=Night+Watch",

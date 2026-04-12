@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 515 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 517 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -17429,6 +17429,76 @@
           "object_number": {
             "type": "string",
             "description": "Rijksmuseum object number (e.g. \"SK-C-5\" for Night Watch)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "cma.art.details",
+      "title": "CMA Artwork Details",
+      "description": "Get full details for a Cleveland Museum artwork by ID \u2014 title, artist, nationality, date, medium, dimensions, culture, provenance, license status (CC0/restricted), image URLs (web + full resolution). Use cma.search to find artwork IDs first (CMA, CC0)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "artwork_id": {
+            "type": "integer",
+            "description": "Cleveland Museum artwork ID (e.g. 135382 for Monet \"The Red Kerchief\"). Use cma.search to find IDs.",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "artwork_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "cma.art.search",
+      "title": "Search Cleveland Museum Collection",
+      "description": "Search 64,000+ artworks at the Cleveland Museum of Art by keyword, artist, type, or department. Filter for CC0-only (commercial-free) images. Returns artwork IDs, title, artist, date, license status, image URLs. Use cma.artwork for full details (CMA, CC0)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search keyword \u2014 artist, title, subject (e.g. \"monet\", \"armor\", \"japanese\")"
+          },
+          "type": {
+            "type": "string",
+            "description": "Artwork type filter (e.g. \"Painting\", \"Sculpture\", \"Print\", \"Photograph\")"
+          },
+          "department": {
+            "type": "string",
+            "description": "Department filter (e.g. \"European Painting and Sculpture\", \"Asian Art\", \"Prints\")"
+          },
+          "artist": {
+            "type": "string",
+            "description": "Artist name filter (e.g. \"Claude Monet\", \"Pablo Picasso\")"
+          },
+          "cc0_only": {
+            "type": "boolean",
+            "description": "Only return CC0-licensed artworks (free for commercial use). Default: false."
+          },
+          "has_image": {
+            "type": "boolean",
+            "description": "Only return artworks with images (default: true)"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Number of results (1-50, default 20)"
           }
         }
       },

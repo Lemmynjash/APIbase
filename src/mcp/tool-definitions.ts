@@ -5171,4 +5171,25 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'entertainment',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // Cleveland Museum of Art — Open Access collection (UC-381)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'cma.search',
+    mcpName: 'cma.art.search',
+    title: 'Search Cleveland Museum Collection',
+    description:
+      'Search 64,000+ artworks at the Cleveland Museum of Art by keyword, artist, type, or department. Filter for CC0-only (commercial-free) images. Returns artwork IDs, title, artist, date, license status, image URLs. Use cma.artwork for full details (CMA, CC0)',
+    category: 'entertainment',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'cma.artwork',
+    mcpName: 'cma.art.details',
+    title: 'Get CMA Artwork Details',
+    description:
+      'Get full details for a Cleveland Museum artwork by ID — title, artist, nationality, date, medium, dimensions, culture, provenance, license status (CC0/restricted), image URLs (web + full resolution). Use cma.search to find artwork IDs first (CMA, CC0)',
+    category: 'entertainment',
+    annotations: READ_ONLY,
+  },
 ];

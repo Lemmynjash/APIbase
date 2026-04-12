@@ -157,6 +157,7 @@ import { DblpAdapter } from './dblp';
 import { NoaaTidesAdapter } from './noaa-tides';
 import { MetMuseumAdapter } from './met-museum';
 import { RijksmuseumAdapter } from './rijksmuseum';
+import { CmaAdapter } from './cma';
 import { config } from '../config';
 
 /**
@@ -986,6 +987,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'rijks':
       // Rijksmuseum — 800K+ artworks, Linked Open Data API, CC-BY, no auth (UC-379)
       return getOrCreate('rijksmuseum', () => new RijksmuseumAdapter());
+    case 'cma':
+      // Cleveland Museum of Art — 64K+ artworks, CC0, no auth (UC-381)
+      return getOrCreate('cma', () => new CmaAdapter());
     default:
       return undefined;
   }

@@ -2948,6 +2948,18 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # Cleveland Museum of Art (UC-381) — 64K+ artworks, CC0, no auth
+  - tool_id: cma.search
+    name: Search Cleveland Museum Collection
+    provider: cma
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: cma.artwork
+    name: CMA Artwork Details
+    provider: cma
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   # Rijksmuseum (UC-379) — Dutch national museum, CC-BY, new Linked Open Data API
   - tool_id: rijks.search
     name: Search Rijksmuseum Collection

@@ -157,6 +157,7 @@ import { dblpSchemas } from './dblp.schema';
 import { tidesSchemas } from './tides.schema';
 import { metSchemas } from './met.schema';
 import { rijksSchemas } from './rijks.schema';
+import { cmaSchemas } from './cma.schema';
 
 export const toolSchemas: Record<string, ZodSchema> = {
   ...weatherSchemas,
@@ -317,4 +318,5 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...tidesSchemas,
   ...metSchemas,
   ...rijksSchemas,
+  ...cmaSchemas,
 };
