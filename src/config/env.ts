@@ -287,6 +287,7 @@ export const appEnvSchema = z.object({
   MPP_ENABLED: z.string().optional().default('false'),
   MPP_SECRET_KEY: z.string().optional().default(''),
   TEMPO_WALLET_ADDRESS: z.string().optional().default(''),
+  TEMPO_PRIVATE_KEY: z.string().optional().default(''),
   MPP_REALM: z.string().optional().default('apibase.pro'),
   MPP_TESTNET: z.string().optional().default('false'),
 

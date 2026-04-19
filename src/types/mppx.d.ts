@@ -1,8 +1,9 @@
 // Type declarations for mppx ESM package (used via dynamic import)
 declare module 'mppx/server' {
-  export function tempo(options: {
+  type TempoMethodParams = {
+    account?: unknown;
     currency: string;
-    recipient: string;
+    recipient: `0x${string}` | string;
     testnet?: boolean;
     chainId?: number;
     amount?: string;
@@ -13,14 +14,17 @@ declare module 'mppx/server' {
     store?: { get(key: string): Promise<unknown>; put(key: string, value: unknown): Promise<void> };
     mode?: 'push' | 'pull';
     rpcUrl?: string;
-  }): unknown;
+  };
+
+  interface TempoFn {
+    (options: TempoMethodParams): unknown;
+    charge(options: TempoMethodParams): unknown;
+    session(options: TempoMethodParams): unknown;
+  }
+  export const tempo: TempoFn;
 
   export const Mppx: {
-    create(options: {
-      methods: unknown[];
-      secretKey?: string;
-      realm?: string;
-    }): {
+    create(options: { methods: unknown[]; secretKey?: string; realm?: string }): {
       charge(options: { amount: string; currency?: string; recipient?: string }): (
         request: Request,
       ) => Promise<{
@@ -29,7 +33,9 @@ declare module 'mppx/server' {
         withReceipt(response: Response): Response;
       }>;
     };
-    toNodeListener(handler: (request: Request) => Promise<unknown>): (
+    toNodeListener(
+      handler: (request: Request) => Promise<unknown>,
+    ): (
       req: import('node:http').IncomingMessage,
       res: import('node:http').ServerResponse,
     ) => Promise<unknown>;

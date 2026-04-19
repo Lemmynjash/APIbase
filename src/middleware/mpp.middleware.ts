@@ -14,13 +14,16 @@ async function ensureMppx(): Promise<void> {
   if (!cfg.enabled) return;
 
   const { Mppx, tempo } = await import('mppx/server');
+  const { privateKeyToAccount } = await import('viem/accounts');
+  const account = privateKeyToAccount(cfg.privateKey as `0x${string}`);
+  const params = {
+    account,
+    currency: cfg.usdcAddress,
+    recipient: cfg.walletAddress as `0x${string}`,
+  };
+
   mppxInstance = Mppx.create({
-    methods: [
-      tempo({
-        currency: cfg.usdcAddress,
-        recipient: cfg.walletAddress,
-      }),
-    ],
+    methods: [tempo.charge(params), tempo.session(params)],
     secretKey: cfg.secretKey,
     realm: cfg.realm,
   });
