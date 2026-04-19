@@ -6,6 +6,7 @@ import { AppError, ErrorCode } from '../types/errors';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let mppxInstance: any = null;
 let initPromise: Promise<void> | null = null;
+let initFailed = false;
 
 async function ensureMppx(): Promise<void> {
   if (mppxInstance) return;
@@ -26,13 +27,14 @@ async function ensureMppx(): Promise<void> {
 }
 
 function getMppxInstance() {
+  if (initFailed) return Promise.resolve(null);
   if (!initPromise) {
     initPromise = ensureMppx().catch((err) => {
+      initFailed = true;
       logger.error(
         { err: err instanceof Error ? err.message : String(err) },
-        'mpp: failed to initialize mppx',
+        'mpp: failed to initialize mppx — MPP disabled until process restart with valid config',
       );
-      initPromise = null;
     });
   }
   return initPromise.then(() => mppxInstance);
