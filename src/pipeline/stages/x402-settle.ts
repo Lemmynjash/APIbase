@@ -11,8 +11,19 @@ const declareDiscoveryExtension = bazaarMod.declareDiscoveryExtension as (opts: 
 import { getX402Config } from '../../config/x402.config';
 import { getCdpConfig } from '../../config/cdp.config';
 import { getSharedResourceServer } from '../../services/x402-server.service';
+import { TOOL_DEFINITIONS } from '../../mcp/tool-definitions';
 import { logger } from '../../config/logger';
 import type { PipelineContext } from '../types';
+
+/**
+ * Look up human description for a toolId, fall back to generic label.
+ * Used to populate V1 `requirements.description` so CDP Bazaar indexes
+ * each tool with a meaningful string.
+ */
+function lookupToolDescription(toolId: string): string {
+  const def = TOOL_DEFINITIONS.find((d) => d.toolId === toolId);
+  return def?.description ?? `APIbase MCP tool: ${toolId}`;
+}
 
 /**
  * Settle x402 on-chain payment after successful provider call (§8.9).
@@ -44,17 +55,53 @@ export async function settleX402(ctx: PipelineContext): Promise<void> {
       payTo: string;
       maxTimeoutSeconds: number;
       extra: Record<string, unknown>;
+      // V1 Bazaar discovery fields (optional — only populated on V1 branch)
+      maxAmountRequired?: string;
+      resource?: string;
+      description?: string;
+      mimeType?: string;
+      outputSchema?: Record<string, unknown>;
     };
 
     if (isPaymentPayloadV1(payload)) {
+      const amountMicro = String(Math.round((ctx.toolPrice ?? 0) * 1_000_000));
+      const toolId = ctx.toolId ?? 'mcp.call';
+      const description = lookupToolDescription(toolId);
+      const resourceUrl = `https://apibase.pro/api/v1/tools/${toolId}/call`;
+
       requirements = {
         scheme: payload.scheme,
         network: payload.network,
         asset: cfg.usdcAddress,
-        amount: String(Math.round((ctx.toolPrice ?? 0) * 1_000_000)),
+        // Keep `amount` for backwards-compat with current CDP settle acceptance.
+        amount: amountMicro,
+        // V1 canonical fields required by CDP Bazaar extractDiscoveryInfoV1
+        // (@x402/extensions/bazaar/index.js:404-450). Without these, CDP
+        // returns null from the V1 discovery-extractor and the merchant never
+        // appears in the Bazaar catalog.
+        maxAmountRequired: amountMicro,
+        resource: resourceUrl,
+        description,
+        mimeType: 'application/json',
         payTo: cfg.paymentAddress,
         maxTimeoutSeconds: cfg.maxTimeoutSeconds,
         extra: { name: 'USD Coin', version: '2' },
+        outputSchema: {
+          input: {
+            type: 'http',
+            method: 'POST',
+            bodyType: 'json',
+            bodyFields: {
+              toolId: { type: 'string', description: 'APIbase tool identifier' },
+              arguments: {
+                type: 'object',
+                description:
+                  'Tool-specific arguments. See /api/v1/tools for per-tool JSON schemas.',
+              },
+            },
+            discoverable: true,
+          },
+        },
       };
     } else {
       requirements = {
