@@ -77,6 +77,27 @@
           "title": "OAuth 2.0 Protected Resource metadata (RFC 9728)"
         }
       ],
+      "ucp-profile": [
+        {
+          "href": "https://apibase.pro/.well-known/ucp",
+          "type": "application/json",
+          "title": "Universal Commerce Protocol v1.0 profile"
+        }
+      ],
+      "acp-discovery": [
+        {
+          "href": "https://apibase.pro/.well-known/acp.json",
+          "type": "application/json",
+          "title": "Agentic Commerce Protocol v1.0 discovery"
+        }
+      ],
+      "x402-challenge": [
+        {
+          "href": "https://apibase.pro/api/v1",
+          "type": "application/json",
+          "title": "x402 marker challenge — anonymous probe returns HTTP 402 with payment requirements"
+        }
+      ],
       "status": [
         {
           "href": "https://apibase.pro/health/ready",

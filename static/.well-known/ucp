@@ -1,0 +1,43 @@
+{
+  "ucp": {
+    "version": "1.0",
+    "protocol_version": "1.0",
+    "protocol_name": "UCP",
+    "site": "https://apibase.pro",
+    "services": [
+      {
+        "name": "apibase-tools",
+        "type": "api-aggregation",
+        "description": "502 API tools from 158 providers under one MCP endpoint, pay-per-call via x402 or MPP",
+        "endpoint": "https://apibase.pro/mcp",
+        "catalog": "https://apibase.pro/api/v1/tools"
+      }
+    ],
+    "capabilities": [
+      "pay-per-call",
+      "micropayments-usdc-base",
+      "micropayments-usdc-tempo",
+      "mcp-streamable-http",
+      "oauth2-client-credentials",
+      "auto-registration"
+    ],
+    "endpoints": {
+      "mcp": "https://apibase.pro/mcp",
+      "rest_catalog": "https://apibase.pro/api/v1/tools",
+      "openapi": "https://apibase.pro/.well-known/openapi.json",
+      "server_card": "https://apibase.pro/.well-known/mcp/server-card.json",
+      "x402_config": "https://apibase.pro/.well-known/x402-payment.json",
+      "oauth_authorization_server": "https://apibase.pro/.well-known/oauth-authorization-server",
+      "oauth_token": "https://apibase.pro/oauth/token",
+      "oauth_register": "https://apibase.pro/oauth/register"
+    },
+    "payment": {
+      "rails": ["x402", "mpp"],
+      "token": "USDC",
+      "price_range_usd": { "min": 0.001, "max": 0.035 },
+      "wallet": "0x50EbDa9dA5dC19c302Ca059d7B9E06e264936480"
+    },
+    "documentation": "https://apibase.pro/ai.txt",
+    "updated_at": "2026-04-22"
+  }
+}
