@@ -44154,9 +44154,7 @@
                 "type": "object",
                 "properties": {
                   "model_id": {
-                    "type": "string",
-                    "description": "Full model ID (e.g. \"meta-llama/Llama-3.3-70B-Instruct\", \"stabilityai/stable-diffusion-xl-base-1.0\")",
-                    "minLength": 1
+                    "type": "object"
                   }
                 },
                 "required": [
@@ -44246,6 +44244,1568 @@
                 },
                 "required": [
                   "search"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/water.sites/call": {
+      "post": {
+        "operationId": "water_sites",
+        "summary": "Search USGS Water Monitoring Sites",
+        "description": "Search 1.5M+ USGS water monitoring sites by US state, county FIPS, bounding box, or site number. Returns site ID, station name, coordinates, altitude, HUC watershed code. Use site numbers with water.realtime for live data (USGS)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "water.sites"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "description": "US state FIPS code, 2 chars (e.g. \"CA\", \"NY\", \"CO\")"
+                  },
+                  "county": {
+                    "type": "string",
+                    "description": "County FIPS code, 5 digits (e.g. \"06037\" for Los Angeles County)"
+                  },
+                  "bbox": {
+                    "type": "string",
+                    "description": "Bounding box: west,south,east,north in decimal degrees (e.g. \"-105.5,39.5,-104.5,40.5\")"
+                  },
+                  "site_no": {
+                    "type": "string",
+                    "description": "USGS site number (e.g. \"09380000\" for Colorado River at Lees Ferry)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/water.realtime/call": {
+      "post": {
+        "operationId": "water_realtime",
+        "summary": "Get Real-Time Water Data",
+        "description": "Get real-time streamflow (ft^3/s), gage height (ft), water temperature, and conductance for a USGS monitoring site. Updated every 15 minutes. Covers rivers, streams, lakes, reservoirs across the US. Use water.sites to find site numbers (USGS)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "water.realtime"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "site_no": {
+                    "type": "string",
+                    "description": "USGS site number (e.g. \"09380000\"). Use water.sites to find site numbers first.",
+                    "minLength": 1
+                  },
+                  "parameter_cd": {
+                    "type": "string",
+                    "description": "Parameter code(s), comma-separated. Common: 00060=streamflow, 00065=gage height, 00010=temperature. Default: all available."
+                  },
+                  "period": {
+                    "type": "string",
+                    "description": "ISO 8601 duration for data window (e.g. \"PT2H\" for 2 hours, \"P7D\" for 7 days). Default: PT2H."
+                  }
+                },
+                "required": [
+                  "site_no"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/worldbank.indicators/call": {
+      "post": {
+        "operationId": "worldbank_indicators",
+        "summary": "Search Development Indicators",
+        "description": "Search 16,000+ World Bank development indicators by keyword or topic — GDP, population, poverty, education, health, environment, trade. Returns indicator ID, name, source, description, topics. Use indicator IDs with finance.country_data for time-series data (World Bank, CC BY 4.0)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "worldbank.indicators"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keyword": {
+                    "type": "string",
+                    "description": "Search keyword for indicators (e.g. \"gdp\", \"population\", \"poverty\", \"education\", \"co2 emissions\")"
+                  },
+                  "topic": {
+                    "type": "string",
+                    "description": "Topic ID filter (1=Agriculture, 3=Economy, 4=Education, 6=Environment, 8=Health, 11=Poverty, 14=Science, 19=Climate Change)"
+                  },
+                  "source": {
+                    "type": "string",
+                    "description": "Source ID filter (2=World Development Indicators, 11=Africa, 57=Gender)"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "description": "Results per page (1-50, default 20)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/cdc.datasets/call": {
+      "post": {
+        "operationId": "cdc_datasets",
+        "summary": "Search CDC Health Datasets",
+        "description": "Search 1,400+ CDC public health datasets — COVID-19, chronic disease, vaccination, mortality, birth/death statistics, environmental health. Returns dataset ID, name, description, category. Use dataset IDs with cdc.query to fetch data (US Gov)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cdc.datasets"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search keyword (e.g. \"covid deaths\", \"vaccination rates\", \"chronic disease\", \"mortality\")"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "Dataset category filter (e.g. \"NCHS\", \"COVID-19\", \"Chronic Disease Indicators\")"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "description": "Number of results (1-50, default 20)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/cdc.query/call": {
+      "post": {
+        "operationId": "cdc_query",
+        "summary": "Query CDC Dataset",
+        "description": "Query a specific CDC dataset using SoQL filters — filter by state, year, age group, condition. Returns structured rows with column names. Supports WHERE, SELECT, ORDER, GROUP BY. Use cdc.datasets to find dataset IDs first (US Gov, Socrata SODA API)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cdc.query"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string",
+                    "description": "CDC dataset ID in xxxx-xxxx format (e.g. \"9bhg-hcku\" for COVID deaths). Use cdc.datasets to find IDs."
+                  },
+                  "where": {
+                    "type": "string",
+                    "description": "SoQL WHERE clause filter (e.g. \"state='CA'\", \"year > 2020\", \"age_group='65+'\")"
+                  },
+                  "select": {
+                    "type": "string",
+                    "description": "Columns to return, comma-separated (e.g. \"state, year, deaths\"). Default: all columns."
+                  },
+                  "order": {
+                    "type": "string",
+                    "description": "Sort order (e.g. \"year DESC\", \"deaths DESC\"). Default: dataset default order."
+                  },
+                  "group": {
+                    "type": "string",
+                    "description": "Group by columns for aggregation (e.g. \"state\" with select \"state, SUM(deaths)\")"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000,
+                    "description": "Max rows to return (1-1000, default 100)"
+                  }
+                },
+                "required": [
+                  "dataset_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/dblp.search/call": {
+      "post": {
+        "operationId": "dblp_search",
+        "summary": "Search CS Papers",
+        "description": "Search 7M+ computer science publications on DBLP by title, keyword, or topic. Returns title, authors, venue (NeurIPS, ICML, CVPR, ACL, etc.), year, DOI. The largest CS-specific bibliography — covers journals, conferences, and workshops (DBLP, CC0)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "dblp.search"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query — paper title, keyword, or topic (e.g. \"transformer attention\", \"graph neural network\", \"LLM reasoning\")",
+                    "minLength": 1
+                  },
+                  "year": {
+                    "type": "integer",
+                    "description": "Filter by publication year (e.g. 2024)"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "description": "Number of results (1-50, default 20)"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/dblp.author/call": {
+      "post": {
+        "operationId": "dblp_author",
+        "summary": "Search CS Authors",
+        "description": "Search 3M+ computer science authors on DBLP. Returns author name, DBLP PID, profile URL, aliases, affiliations. Use for finding researchers, checking publication records, or discovering collaborators (DBLP, CC0)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "dblp.author"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Author name to search (e.g. \"Geoffrey Hinton\", \"Yann LeCun\", \"Ilya Sutskever\")",
+                    "minLength": 1
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 30,
+                    "description": "Number of results (1-30, default 10)"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/tides.predictions/call": {
+      "post": {
+        "operationId": "tides_predictions",
+        "summary": "Get Tide Predictions",
+        "description": "Get tide predictions for a NOAA station — high/low tides, hourly, or 6-minute intervals. Returns predicted water level in feet or meters. Covers US coastlines, rivers, Great Lakes. Station IDs: 8518750 (NYC), 9414290 (SF), 8443970 (Boston) (NOAA, US Gov)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tides.predictions"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "station": {
+                    "type": "string",
+                    "description": "NOAA station ID (e.g. \"8518750\" for The Battery NYC, \"9414290\" for San Francisco, \"8443970\" for Boston)",
+                    "minLength": 1
+                  },
+                  "begin_date": {
+                    "type": "string",
+                    "description": "Start date in YYYYMMDD format (e.g. \"20260409\")"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "description": "End date in YYYYMMDD format (e.g. \"20260410\"). Max range: 31 days."
+                  },
+                  "interval": {
+                    "type": "string",
+                    "enum": [
+                      "hilo",
+                      "h",
+                      "6"
+                    ],
+                    "description": "Prediction interval: \"hilo\" = high/low tides only (default), \"h\" = hourly, \"6\" = every 6 minutes"
+                  },
+                  "datum": {
+                    "type": "string",
+                    "description": "Vertical datum: MLLW (default), MSL, NAVD, MHHW, MHW, MLW, etc."
+                  },
+                  "units": {
+                    "type": "string",
+                    "enum": [
+                      "english",
+                      "metric"
+                    ],
+                    "description": "Units: \"english\" = feet (default), \"metric\" = meters"
+                  }
+                },
+                "required": [
+                  "station",
+                  "begin_date",
+                  "end_date"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/tides.water_levels/call": {
+      "post": {
+        "operationId": "tides_water_levels",
+        "summary": "Get Real-Time Water Levels",
+        "description": "Get real-time observed water levels from a NOAA station — latest reading or recent history. Returns water level in feet or meters with quality flags. Updated every 6 minutes. Covers US coastlines, rivers, Great Lakes (NOAA, US Gov)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tides.water_levels"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "station": {
+                    "type": "string",
+                    "description": "NOAA station ID (e.g. \"8518750\" for The Battery NYC, \"9414290\" for San Francisco)",
+                    "minLength": 1
+                  },
+                  "date": {
+                    "type": "string",
+                    "description": "Date filter: \"latest\" (default, most recent reading), \"today\", \"recent\" (last 72 hours), or YYYYMMDD for specific date"
+                  },
+                  "datum": {
+                    "type": "string",
+                    "description": "Vertical datum: MLLW (default), MSL, NAVD, MHHW, MHW, MLW, etc."
+                  },
+                  "units": {
+                    "type": "string",
+                    "enum": [
+                      "english",
+                      "metric"
+                    ],
+                    "description": "Units: \"english\" = feet (default), \"metric\" = meters"
+                  }
+                },
+                "required": [
+                  "station"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/met.search/call": {
+      "post": {
+        "operationId": "met_search",
+        "summary": "Search Met Museum Artworks",
+        "description": "Search 470,000+ artworks at The Metropolitan Museum of Art by keyword, artist, medium, department, date range, or geography. Returns object IDs — use met.details for full metadata and images. CC0 public domain (Met Museum)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "met.search"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search keyword — artist, title, medium, or subject (e.g. \"monet\", \"sunflowers\", \"greek vase\", \"armor\")",
+                    "minLength": 1
+                  },
+                  "department_id": {
+                    "type": "integer",
+                    "description": "Department filter: 1=American Decorative Arts, 3=Ancient Near Eastern Art, 6=Asian Art, 9=Drawings and Prints, 11=European Paintings, 13=Greek and Roman Art, 17=Medieval Art, 21=Modern Art"
+                  },
+                  "medium": {
+                    "type": "string",
+                    "description": "Medium filter (e.g. \"Paintings\", \"Sculpture\", \"Photographs\", \"Ceramics\")"
+                  },
+                  "has_images": {
+                    "type": "boolean",
+                    "description": "Only return artworks with images (default: true)"
+                  },
+                  "geo_location": {
+                    "type": "string",
+                    "description": "Geographic location filter (e.g. \"France\", \"Japan\", \"Egypt\")"
+                  },
+                  "date_begin": {
+                    "type": "integer",
+                    "description": "Start year for date range filter (e.g. 1800). Use with date_end."
+                  },
+                  "date_end": {
+                    "type": "integer",
+                    "description": "End year for date range filter (e.g. 1900). Use with date_begin."
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/met.details/call": {
+      "post": {
+        "operationId": "met_details",
+        "summary": "Get Artwork Details",
+        "description": "Get full details for a Met Museum artwork by object ID — title, artist, date, medium, dimensions, department, culture, provenance, high-res image URLs, public domain status. Use met.search to find object IDs first (Met Museum, CC0)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "met.details"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "object_id": {
+                    "type": "integer",
+                    "description": "Met Museum object ID (e.g. 436524 for Van Gogh Sunflowers, 45734 for Washington Crossing the Delaware). Use met.search to find IDs.",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "object_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/rijks.search/call": {
+      "post": {
+        "operationId": "rijks_search",
+        "summary": "Search Rijksmuseum Collection",
+        "description": "Search 800,000+ artworks at the Rijksmuseum (Dutch national museum) by title, description, creation date, or object number. Returns Linked Open Data object IDs — use rijks.details for full metadata. Covers Rembrandt, Vermeer, Van Gogh, and centuries of Dutch art. CC-BY license (Rijksmuseum)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "rijks.search"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Artwork title search (e.g. \"Night Watch\", \"Self-portrait\", \"Milkmaid\")"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Search within artwork descriptions (e.g. \"portrait\", \"landscape\")"
+                  },
+                  "creation_date": {
+                    "type": "string",
+                    "description": "Filter by creation year or date (e.g. \"1642\", \"1665\")"
+                  },
+                  "object_number": {
+                    "type": "string",
+                    "description": "Rijksmuseum object number (e.g. \"SK-C-5\" for Night Watch)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/rijks.details/call": {
+      "post": {
+        "operationId": "rijks_details",
+        "summary": "Get Rijksmuseum Artwork Details",
+        "description": "Get full details for a Rijksmuseum artwork by object ID — title (multiple languages), object number, creation date, production location, materials, dimensions, current gallery location. Linked Art JSON-LD format (CIDOC CRM). Use rijks.search to find object IDs first (Rijksmuseum, CC-BY)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "rijks.details"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "object_id": {
+                    "type": "string",
+                    "description": "Rijksmuseum numeric ID (e.g. \"200107928\" for The Night Watch). Use rijks.search to find IDs.",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "object_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/cma.search/call": {
+      "post": {
+        "operationId": "cma_search",
+        "summary": "Search Cleveland Museum Collection",
+        "description": "Search 64,000+ artworks at the Cleveland Museum of Art by keyword, artist, type, or department. Filter for CC0-only (commercial-free) images. Returns artwork IDs, title, artist, date, license status, image URLs. Use cma.artwork for full details (CMA, CC0)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cma.search"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search keyword — artist, title, subject (e.g. \"monet\", \"armor\", \"japanese\")"
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "Artwork type filter (e.g. \"Painting\", \"Sculpture\", \"Print\", \"Photograph\")"
+                  },
+                  "department": {
+                    "type": "string",
+                    "description": "Department filter (e.g. \"European Painting and Sculpture\", \"Asian Art\", \"Prints\")"
+                  },
+                  "artist": {
+                    "type": "string",
+                    "description": "Artist name filter (e.g. \"Claude Monet\", \"Pablo Picasso\")"
+                  },
+                  "cc0_only": {
+                    "type": "boolean",
+                    "description": "Only return CC0-licensed artworks (free for commercial use). Default: false."
+                  },
+                  "has_image": {
+                    "type": "boolean",
+                    "description": "Only return artworks with images (default: true)"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "description": "Number of results (1-50, default 20)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/cma.artwork/call": {
+      "post": {
+        "operationId": "cma_artwork",
+        "summary": "Get CMA Artwork Details",
+        "description": "Get full details for a Cleveland Museum artwork by ID — title, artist, nationality, date, medium, dimensions, culture, provenance, license status (CC0/restricted), image URLs (web + full resolution). Use cma.search to find artwork IDs first (CMA, CC0)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cma.artwork"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "artwork_id": {
+                    "type": "integer",
+                    "description": "Cleveland Museum artwork ID (e.g. 135382 for Monet \"The Red Kerchief\"). Use cma.search to find IDs.",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "artwork_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/smithsonian.search/call": {
+      "post": {
+        "operationId": "smithsonian_search",
+        "summary": "Search Smithsonian Collections",
+        "description": "Full-text search across 11M+ records from 19 Smithsonian museums — art, artifacts, scientific specimens, archives. Filter by type (objects/species/archives/books/online_media/events/places), sort by relevancy/newest/updated/random, and CC0-only by default. Covers National Museum of Natural History, Air and Space, American Art, Portrait Gallery, Freer|Sackler, and more (Smithsonian Open Access, CC0 subset)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "smithsonian.search"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string",
+                    "description": "Full-text search query. Example: \"dinosaur\", \"picasso\", \"apollo 11\". Supports EDAN query syntax (field:value, AND/OR).",
+                    "minLength": 1
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "description": "Number of results to return (1-100, default 10)."
+                  },
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Offset for pagination (default 0). Useful with rowCount from previous call."
+                  },
+                  "sort": {
+                    "type": "string",
+                    "enum": [
+                      "relevancy",
+                      "newest",
+                      "updated",
+                      "random"
+                    ],
+                    "description": "Sort order for results. Default: relevancy."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "archives",
+                      "books",
+                      "online_media",
+                      "objects",
+                      "events",
+                      "places",
+                      "species"
+                    ],
+                    "description": "Filter by record type. E.g. \"objects\" for 3D objects, \"species\" for scientific specimens."
+                  },
+                  "online_media_type": {
+                    "type": "string",
+                    "enum": [
+                      "Images",
+                      "Sound recordings",
+                      "Videos"
+                    ],
+                    "description": "Filter to items that have media of a specific type."
+                  },
+                  "cc0_only": {
+                    "type": "boolean",
+                    "description": "Filter results to CC0-licensed records only (default true). Set false to include all records with their license field."
+                  }
+                },
+                "required": [
+                  "q"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "404": {
+            "description": "Tool not found"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "502": {
+            "description": "Provider unavailable"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/smithsonian.record/call": {
+      "post": {
+        "operationId": "smithsonian_record",
+        "summary": "Get Smithsonian Record Details",
+        "description": "Get full record for a Smithsonian Open Access item by ID — title, unit code (which of 19 museums), license (CC0 flag), record_link (canonical URL), data_source, online media (images/audio/video), freetext metadata, indexed structured fields. Use smithsonian.search to find IDs first (Smithsonian, CC0 subset)",
+        "x-payment-info": {
+          "pricingMode": "fixed",
+          "price": "0.001000",
+          "protocols": [
+            "x402",
+            "mpp"
+          ]
+        },
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "smithsonian.record"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Smithsonian record ID from a previous search result (e.g. \"edanmdm-nmnhvz_5068559\" or \"ld1-*\"). Use smithsonian.search first to find IDs.",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "id"
                 ]
               }
             }

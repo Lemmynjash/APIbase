@@ -467,6 +467,15 @@
     "docs_url": "https://api.nasa.gov/",
     "limit_proof": "1,000 requests/hour per API key"
   },
+  "smithsonian": {
+    "display_name": "Smithsonian Institution",
+    "health_url": "https://api.si.edu/openaccess/api/v1.0/stats?api_key=DEMO_KEY",
+    "limit_type": "hourly",
+    "free_limit": 1000,
+    "reset_period": "hourly",
+    "docs_url": "https://api.data.gov/docs/rate-limits/",
+    "limit_proof": "api.data.gov default: 1,000 requests/hour per API key (hourly-resetting)"
+  },
   "jpl": {
     "display_name": "NASA JPL SSD",
     "health_url": "https://ssd-api.jpl.nasa.gov/cad.api?limit=1",

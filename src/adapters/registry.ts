@@ -20,6 +20,7 @@ import { DiffbotAdapter } from './diffbot';
 import { WhoisXmlAdapter } from './whoisxml';
 import { SpoonacularAdapter } from './spoonacular';
 import { NasaAdapter } from './nasa';
+import { SmithsonianAdapter } from './smithsonian';
 import { JplAdapter } from './jpl';
 import { RawgAdapter } from './rawg';
 import { IgdbAdapter } from './igdb';
@@ -333,6 +334,13 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
       const nasaKey = (config as Record<string, unknown>).PROVIDER_KEY_NASA as string | undefined;
       if (!nasaKey) return undefined;
       return getOrCreate('nasa', () => new NasaAdapter(nasaKey));
+    }
+    case 'smithsonian': {
+      const smKey = (config as Record<string, unknown>).PROVIDER_KEY_SMITHSONIAN as
+        | string
+        | undefined;
+      if (!smKey) return undefined;
+      return getOrCreate('smithsonian', () => new SmithsonianAdapter(smKey));
     }
     case 'jpl':
       // JPL SSD APIs are open access — no API key needed

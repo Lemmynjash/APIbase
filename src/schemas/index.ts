@@ -21,6 +21,7 @@ import { diffbotSchemas } from './diffbot.schema';
 import { whoisxmlSchemas } from './whoisxml.schema';
 import { spoonacularSchemas } from './spoonacular.schema';
 import { nasaSchemas } from './nasa.schema';
+import { smithsonianSchemas } from './smithsonian.schema';
 import { jplSchemas } from './jpl.schema';
 import { rawgSchemas } from './rawg.schema';
 import { igdbSchemas } from './igdb.schema';
@@ -182,6 +183,7 @@ export const toolSchemas: Record<string, ZodSchema> = {
   ...whoisxmlSchemas,
   ...spoonacularSchemas,
   ...nasaSchemas,
+  ...smithsonianSchemas,
   ...jplSchemas,
   ...rawgSchemas,
   ...igdbSchemas,

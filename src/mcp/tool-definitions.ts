@@ -5192,4 +5192,25 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'entertainment',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // Smithsonian Institution — 19 museums, 11M+ Open Access records (UC-382)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'smithsonian.search',
+    mcpName: 'smithsonian.collection.search',
+    title: 'Search Smithsonian Collections',
+    description:
+      'Full-text search across 11M+ records from 19 Smithsonian museums — art, artifacts, scientific specimens, archives. Filter by type (objects/species/archives/books/online_media/events/places), sort by relevancy/newest/updated/random, and CC0-only by default. Covers National Museum of Natural History, Air and Space, American Art, Portrait Gallery, Freer|Sackler, and more (Smithsonian Open Access, CC0 subset)',
+    category: 'entertainment',
+    annotations: READ_ONLY,
+  },
+  {
+    toolId: 'smithsonian.record',
+    mcpName: 'smithsonian.collection.record',
+    title: 'Get Smithsonian Record Details',
+    description:
+      'Get full record for a Smithsonian Open Access item by ID — title, unit code (which of 19 museums), license (CC0 flag), record_link (canonical URL), data_source, online media (images/audio/video), freetext metadata, indexed structured fields. Use smithsonian.search to find IDs first (Smithsonian, CC0 subset)',
+    category: 'entertainment',
+    annotations: READ_ONLY,
+  },
 ];

@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 517 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 514 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -1714,204 +1714,6 @@
         },
         "required": [
           "vault_address"
-        ]
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "foursquare.places.search",
-      "description": "Search for places (restaurants, hotels, cafes, attractions) worldwide by name, category, or location (Foursquare)",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "Search term (e.g. \"restaurant\", \"coffee\", \"hotel\")"
-          },
-          "near": {
-            "type": "string",
-            "description": "Place name for geographic context (e.g. \"Bangkok,Thailand\", \"New York,NY\")"
-          },
-          "ll": {
-            "type": "string",
-            "description": "Latitude,longitude (e.g. \"13.7563,100.5018\"). Use either near or ll, not both"
-          },
-          "radius": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100000,
-            "description": "Search radius in meters (max 100000)"
-          },
-          "categories": {
-            "type": "string",
-            "description": "Comma-separated Foursquare category IDs to filter results"
-          },
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 50,
-            "description": "Max results to return (1-50, default 10)"
-          },
-          "sort": {
-            "type": "string",
-            "enum": [
-              "relevance",
-              "rating",
-              "distance",
-              "popularity"
-            ],
-            "description": "Sort order for results"
-          },
-          "open_now": {
-            "type": "boolean",
-            "description": "Filter to only places open now"
-          }
-        }
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "foursquare.places.details",
-      "description": "Get detailed information about a place \u2014 hours, rating, price, contact, categories (Foursquare)",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "fsq_id": {
-            "type": "string",
-            "description": "Foursquare place ID (e.g. \"4b5988fef964a520e62a28e3\")"
-          }
-        },
-        "required": [
-          "fsq_id"
-        ]
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "foursquare.places.tips",
-      "description": "Get user tips and reviews for a place (Foursquare)",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "fsq_id": {
-            "type": "string",
-            "description": "Foursquare place ID to get tips for"
-          },
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 50,
-            "description": "Max tips to return (1-50, default 10)"
-          },
-          "sort": {
-            "type": "string",
-            "enum": [
-              "popular",
-              "newest",
-              "oldest"
-            ],
-            "description": "Sort order for tips: popular, newest, or oldest"
-          }
-        },
-        "required": [
-          "fsq_id"
-        ]
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "foursquare.places.photos",
-      "description": "Get photos for a place with size and classification options (Foursquare)",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "fsq_id": {
-            "type": "string",
-            "description": "Foursquare place ID to get photos for"
-          },
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 50,
-            "description": "Max photos to return (1-50, default 10)"
-          },
-          "sort": {
-            "type": "string",
-            "enum": [
-              "popular",
-              "newest"
-            ],
-            "description": "Sort order for photos: popular or newest"
-          },
-          "classifications": {
-            "type": "string",
-            "description": "Comma-separated photo classifications (e.g. \"food,indoor,outdoor\")"
-          }
-        },
-        "required": [
-          "fsq_id"
-        ]
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "foursquare.places.autocomplete",
-      "description": "Get autocomplete suggestions for places, addresses, and searches (Foursquare)",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "Search query for autocomplete suggestions"
-          },
-          "ll": {
-            "type": "string",
-            "description": "Latitude,longitude to bias results (e.g. \"13.7563,100.5018\")"
-          },
-          "radius": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100000,
-            "description": "Bias radius in meters for location results"
-          },
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 10,
-            "description": "Max suggestions to return (1-10, default 5)"
-          },
-          "types": {
-            "type": "string",
-            "description": "Comma-separated result types (e.g. \"place,address,search\")"
-          }
-        },
-        "required": [
-          "query"
         ]
       },
       "annotations": {
@@ -17501,6 +17303,101 @@
             "description": "Number of results (1-50, default 20)"
           }
         }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "smithsonian.collection.record",
+      "title": "Smithsonian Record Details",
+      "description": "Get full record for a Smithsonian Open Access item by ID \u2014 title, unit code (which of 19 museums), license (CC0 flag), record_link (canonical URL), data_source, online media (images/audio/video), freetext metadata, indexed structured fields. Use smithsonian.search to find IDs first (Smithsonian, CC0 subset)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Smithsonian record ID from a previous search result (e.g. \"edanmdm-nmnhvz_5068559\" or \"ld1-*\"). Use smithsonian.search first to find IDs.",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "smithsonian.collection.search",
+      "title": "Search Smithsonian Collections",
+      "description": "Full-text search across 11M+ records from 19 Smithsonian museums \u2014 art, artifacts, scientific specimens, archives. Filter by type (objects/species/archives/books/online_media/events/places), sort by relevancy/newest/updated/random, and CC0-only by default. Covers National Museum of Natural History, Air and Space, American Art, Portrait Gallery, Freer|Sackler, and more (Smithsonian Open Access, CC0 subset)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Full-text search query. Example: \"dinosaur\", \"picasso\", \"apollo 11\". Supports EDAN query syntax (field:value, AND/OR).",
+            "minLength": 1
+          },
+          "rows": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of results to return (1-100, default 10)."
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Offset for pagination (default 0). Useful with rowCount from previous call."
+          },
+          "sort": {
+            "type": "string",
+            "enum": [
+              "relevancy",
+              "newest",
+              "updated",
+              "random"
+            ],
+            "description": "Sort order for results. Default: relevancy."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "archives",
+              "books",
+              "online_media",
+              "objects",
+              "events",
+              "places",
+              "species"
+            ],
+            "description": "Filter by record type. E.g. \"objects\" for 3D objects, \"species\" for scientific specimens."
+          },
+          "online_media_type": {
+            "type": "string",
+            "enum": [
+              "Images",
+              "Sound recordings",
+              "Videos"
+            ],
+            "description": "Filter to items that have media of a specific type."
+          },
+          "cc0_only": {
+            "type": "boolean",
+            "description": "Filter results to CC0-licensed records only (default true). Set false to include all records with their license field."
+          }
+        },
+        "required": [
+          "q"
+        ]
       },
       "annotations": {
         "readOnlyHint": true,

@@ -2960,6 +2960,18 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # Smithsonian Institution (UC-382) — 19 museums, 11M+ records, CC0 subset, api.data.gov key
+  - tool_id: smithsonian.search
+    name: Search Smithsonian Collections
+    provider: smithsonian
+    price_usd: "0.001"
+    cache_ttl: 86400
+  - tool_id: smithsonian.record
+    name: Smithsonian Record Details
+    provider: smithsonian
+    price_usd: "0.001"
+    cache_ttl: 86400
+
   # Rijksmuseum (UC-379) — Dutch national museum, CC-BY, new Linked Open Data API
   - tool_id: rijks.search
     name: Search Rijksmuseum Collection

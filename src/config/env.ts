@@ -103,6 +103,9 @@ export const appEnvSchema = z.object({
   // NASA Open APIs (UC-034) — query param auth, 1K req/hour free
   PROVIDER_KEY_NASA: z.string().optional().default(''),
 
+  // Smithsonian Institution Open Access (UC-382) — api.data.gov key, 1K req/hour free
+  PROVIDER_KEY_SMITHSONIAN: z.string().optional().default(''),
+
   // RAWG Video Games Database (UC-037) — query param auth, unlimited free
   PROVIDER_KEY_RAWG: z.string().optional().default(''),
 
