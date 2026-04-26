@@ -5213,4 +5213,16 @@ export const TOOL_DEFINITIONS: McpToolDefinition[] = [
     category: 'entertainment',
     annotations: READ_ONLY,
   },
+  // ---------------------------------------------------------------------------
+  // USDA Soil Data Access — SSURGO soil survey, US Gov open data (UC-386)
+  // ---------------------------------------------------------------------------
+  {
+    toolId: 'soil.properties',
+    mcpName: 'soil.survey.properties',
+    title: 'Get Soil Properties by Location',
+    description:
+      'Get USDA SSURGO soil properties for a US location by lat/lon (WGS84). Returns dominant component(s) with depth-stratified horizons including drainage class, taxonomic class, pH, organic matter %, and sand/silt/clay percentages per horizon. Coverage: US continental + Alaska + Hawaii + territories; international/water/unsurveyed points return empty components array. Authoritative source: NRCS Soil Data Access (no auth, unlimited free, US Gov open data)',
+    category: 'world',
+    annotations: READ_ONLY,
+  },
 ];

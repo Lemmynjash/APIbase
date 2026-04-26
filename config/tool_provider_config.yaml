@@ -2972,6 +2972,13 @@ tools:
     price_usd: "0.001"
     cache_ttl: 86400
 
+  # USDA Soil Data Access (UC-386) — SSURGO soil survey, US Gov open data, no auth
+  - tool_id: soil.properties
+    name: Soil Properties by Location
+    provider: soil
+    price_usd: "0.001"
+    cache_ttl: 2592000  # 30 days — soil data updates rarely
+
   # Rijksmuseum (UC-379) — Dutch national museum, CC-BY, new Linked Open Data API
   - tool_id: rijks.search
     name: Search Rijksmuseum Collection

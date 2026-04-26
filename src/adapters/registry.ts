@@ -22,6 +22,7 @@ import { SpoonacularAdapter } from './spoonacular';
 import { NasaAdapter } from './nasa';
 import { SmithsonianAdapter } from './smithsonian';
 import { JplAdapter } from './jpl';
+import { SoilAdapter } from './soil';
 import { RawgAdapter } from './rawg';
 import { IgdbAdapter } from './igdb';
 import { QrServerAdapter } from './qrserver';
@@ -345,6 +346,9 @@ export function resolveAdapter(toolId: string): BaseAdapter | undefined {
     case 'jpl':
       // JPL SSD APIs are open access — no API key needed
       return getOrCreate('jpl', () => new JplAdapter());
+    case 'soil':
+      // USDA Soil Data Access — US Gov open data, no auth, unlimited
+      return getOrCreate('soil', () => new SoilAdapter());
     case 'rawg': {
       const rawgKey = (config as Record<string, unknown>).PROVIDER_KEY_RAWG as string | undefined;
       if (!rawgKey) return undefined;

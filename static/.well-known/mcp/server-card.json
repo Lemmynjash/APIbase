@@ -1,6 +1,6 @@
 {
   "name": "APIbase \u2014 The API Hub for AI Agents",
-  "description": "Unified MCP gateway to 514 tools. Dual-rail: x402 + MPP.",
+  "description": "Unified MCP gateway to 515 tools. Dual-rail: x402 + MPP.",
   "version": "2.1.0",
   "tools": [
     {
@@ -17397,6 +17397,38 @@
         },
         "required": [
           "q"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "soil.survey.properties",
+      "title": "Soil Properties by Location",
+      "description": "Get USDA SSURGO soil properties for a US location by lat/lon (WGS84). Returns dominant component(s) with depth-stratified horizons including drainage class, taxonomic class, pH, organic matter %, and sand/silt/clay percentages per horizon. Coverage: US continental + Alaska + Hawaii + territories; international/water/unsurveyed points return empty components array. Authoritative source: NRCS Soil Data Access (no auth, unlimited free, US Gov open data)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "description": "Latitude in WGS84 decimal degrees (e.g. 42.0 for central Iowa farmland, 38.89 for Washington DC). Coverage: US continental + Alaska + Hawaii + territories.",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lon": {
+            "type": "number",
+            "description": "Longitude in WGS84 decimal degrees (e.g. -93.5 for central Iowa, -77.03 for Washington DC). Note: longitude FIRST in coordinate pairs only matters for SQL \u2014 this field is independent.",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lon"
         ]
       },
       "annotations": {

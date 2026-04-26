@@ -485,6 +485,15 @@
     "docs_url": "https://ssd-api.jpl.nasa.gov/doc/",
     "limit_proof": "US Government open data, no auth required, no documented rate limits"
   },
+  "soil": {
+    "display_name": "USDA Soil Data Access",
+    "health_url": "https://sdmdataaccess.nrcs.usda.gov/Tabular/SDMTabularService/post.rest",
+    "limit_type": "unlimited",
+    "free_limit": 0,
+    "reset_period": "none",
+    "docs_url": "https://sdmdataaccess.nrcs.usda.gov/",
+    "limit_proof": "US Government open data (NRCS SSURGO), no auth required, no documented rate limits"
+  },
   "rawg": {
     "display_name": "RAWG Video Games",
     "health_url": "https://api.rawg.io/api/games?key=test&page_size=1",
